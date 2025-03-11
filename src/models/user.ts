@@ -1,19 +1,19 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 export interface IUser extends Document {
-  name: string;
+  firstname: string;
+  lastname: string;
   email: string;
   password: string;
-  image?: string;
   createdAt: Date;
 }
 
 const UserSchema: Schema = new Schema(
   {
-    name: { type: String, required: true },
+    firstname: { type: String, required: true },
+    lastname: { type: String, required: true },
     email: { type: String, required: true, unique: true },
-    password: { type: String, required: true, select: false }, // Hide password by default
-    image: { type: String },
+    password: { type: String, required: true, select: false },
   },
   { timestamps: true }
 );

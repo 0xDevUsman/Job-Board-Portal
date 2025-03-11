@@ -28,7 +28,7 @@ export async function dbConnect() {
   if (!cached.promise) {
     cached.promise = mongoose
       .connect(MONGODB_URI, {
-        dbName: "resumeBuilderDB",
+        dbName: "job-board-portal",
         bufferCommands: false,
       })
       .then((mongoose) => mongoose);
