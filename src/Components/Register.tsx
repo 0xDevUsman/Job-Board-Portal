@@ -9,7 +9,9 @@ import topRight from "@/assets/top-right.png";
 import bottomLeft from "@/assets/bottom-left.png";
 import Link from "next/link";
 import { useState } from "react";
-export default function Login() {
+export default function Register() {
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   return (
@@ -43,6 +45,34 @@ export default function Login() {
         </div>
         <div className="flex flex-col gap-1 mt-3">
           <label
+            htmlFor="first-name"
+            className="text-gray-700 font-medium text-start mt-3"
+          >
+            <span className="text-red-500">*</span> First name
+          </label>
+          <input
+            type="first-name"
+            id="first-name"
+            placeholder="john"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition"
+          />
+          <label
+            htmlFor="last-name"
+            className="text-gray-700 font-medium text-start mt-3"
+          >
+            <span className="text-red-500">*</span> Last name
+          </label>
+          <input
+            type="last-name"
+            id="last-name"
+            placeholder="Doe"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition"
+          />
+          <label
             htmlFor="email"
             className="text-gray-700 font-medium text-start mt-3"
           >
@@ -72,9 +102,9 @@ export default function Login() {
           />
         </div>
         <h1 className="text-sm text-gray-500 mt-3 text-start">
-          <Link href="/register" className="">
-            Don&apos;t have an account?{" "}
-            <span className="text-blue-500 hover:underline">Register</span>
+          <Link href="/login" className="">
+            Already have an account?{" "}
+            <span className="text-blue-500 hover:underline">Login</span>
           </Link>
         </h1>
         <button className="w-full bg-blue-500 text-white font-medium py-3 rounded-md shadow-sm transition focus:ring-1 focus:ring-blue-500 hover:cursor-pointer hover:bg-blue-600 duration-150 mt-6">
