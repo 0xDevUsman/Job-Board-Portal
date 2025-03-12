@@ -9,12 +9,55 @@ import topRight from "@/assets/top-right.png";
 import bottomLeft from "@/assets/bottom-left.png";
 import Link from "next/link";
 import { useState } from "react";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
+
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const router = useRouter();
+
+  const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      const result = await signIn("credentials", {
+        redirect: false,
+        email,
+        password,
+      });
+
+      if (result?.error) {
+        toast.error(result.error);
+      } else {
+        toast.success("Login successful!");
+        setTimeout(() => router.push("/"), 2000);
+      }
+    } catch (error) {
+      console.error("Login failed:", error);
+      toast.error("Login failed. Please try again.");
+    }
+  };
+
+  const googleSignIn = async () => {
+    try {
+      await signIn("google", { callbackUrl: "/" });
+    } catch (error) {
+      console.error("Google login failed:", error);
+      toast.error("Google login failed. Please try again.");
+    }
+  };
+
+  const githubSignIn = async () => {
+    try {
+      await signIn("github", { callbackUrl: "/" });
+    } catch (error) {
+      console.error("Github login failed:", error);
+      toast.error("Github login failed. Please try again.");
+    }
+  };
   return (
     <div className="relative flex flex-col items-center justify-center min-h-screen bg-[#F5FAFF] px-4">
-      <div className="absolute top-0 right-0">
+      <div className="absolute  hidden md:block md:opacity-70 lg:opacity-100 lg-opacity-85  top-0 right-0">
         <Image src={topRight} alt="" />
       </div>
       <div className="flex justify-center items-center gap-3 mb-6">
@@ -23,14 +66,14 @@ export default function Login() {
       </div>
       <div className="bg-white shadow-xl rounded-lg p-8 w-full max-w-sm text-center">
         <button
-          onClick={() => signIn("google")}
+          onClick={() => googleSignIn()}
           className="w-full flex items-center justify-center gap-3 bg-white border border-gray-300 shadow-sm text-gray-700 font-medium px-4 py-3 rounded-md transition focus:ring-1 focus:ring-blue-500 hover:cursor-pointer hover:border-blue-500 duration-150"
         >
           <Image src={google} alt="Google Logo" width={20} height={20} />
           Sign in with Google
         </button>
         <button
-          onClick={() => signIn("github")}
+          onClick={() => githubSignIn()}
           className="w-full flex items-center justify-center gap-3 bg-white border border-gray-300 shadow-sm text-gray-700 font-medium px-4 py-3 rounded-md transition focus:ring-1 focus:ring-blue-500 hover:cursor-pointer hover:border-blue-500 duration-150 mt-4"
         >
           <Image src={github} alt="Google Logo" width={20} height={20} />
@@ -41,7 +84,7 @@ export default function Login() {
           <h1 className="text-sm text-gray-500">OR</h1>
           <div className="h-[1px] w-full bg-gray-500"></div>
         </div>
-        <div className="flex flex-col gap-1 mt-3">
+        <form onSubmit={submitHandler} className="flex flex-col gap-1 mt-3">
           <label
             htmlFor="email"
             className="text-gray-700 font-medium text-start mt-3"
@@ -70,18 +113,21 @@ export default function Login() {
             onChange={(e) => setPassword(e.target.value)}
             className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition"
           />
-        </div>
-        <h1 className="text-sm text-gray-500 mt-3 text-start">
-          <Link href="/register" className="">
-            Don&apos;t have an account?{" "}
-            <span className="text-blue-500 hover:underline">Register</span>
-          </Link>
-        </h1>
-        <button className="w-full bg-blue-500 text-white font-medium py-3 rounded-md shadow-sm transition focus:ring-1 focus:ring-blue-500 hover:cursor-pointer hover:bg-blue-600 duration-150 mt-6">
-          Login
-        </button>
+          <h1 className="text-sm text-gray-500 mt-3 text-start">
+            <Link href="/register" className="">
+              Don&apos;t have an account?{" "}
+              <span className="text-blue-500 hover:underline">Register</span>
+            </Link>
+            <button
+              type="submit"
+              className="w-full bg-blue-500 text-white font-medium py-3 rounded-md shadow-sm transition focus:ring-1 focus:ring-blue-500 hover:cursor-pointer hover:bg-blue-600 duration-150 mt-6"
+            >
+              Login
+            </button>
+          </h1>
+        </form>
       </div>
-      <div className="absolute bottom-0 left-0">
+      <div className="absolute hidden md:block md:opacity-70 lg:opacity-100 lg-opacity-85  bottom-0 left-0">
         <Image src={bottomLeft} alt="" />
       </div>
     </div>

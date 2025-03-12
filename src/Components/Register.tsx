@@ -7,17 +7,49 @@ import google from "@/assets/google.svg";
 import github from "@/assets/github.svg";
 import topRight from "@/assets/top-right.png";
 import bottomLeft from "@/assets/bottom-left.png";
+import axios from "axios";
 import Link from "next/link";
+import { toast } from "react-toastify";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+
 export default function Register() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const router = useRouter();
+  const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      const { data } = await axios.post("/api/auth/register", {
+        firstname: firstName,
+        lastname: lastName,
+        email: email,
+        password: password,
+      });
+      console.log(data);
+      if (data) {
+        toast.success("Registration successful. Please login.");
+        setTimeout(() => {
+          router.push("/login");
+        }, 2000);
+      }
+    } catch (error: unknown) {
+      const errorMessage = axios.isAxiosError(error)
+        ? error.response?.data?.message ||
+          "Registration failed. Please try again."
+        : "An unexpected error occurred. Please try again.";
+
+      console.error("Registration failed:", errorMessage);
+      alert(errorMessage);
+    }
+  };
+
   return (
     <div className="relative flex flex-col items-center justify-center min-h-screen bg-[#F5FAFF] px-4">
-      <div className="absolute top-0 right-0">
-        <Image src={topRight} alt="" />
+      <div className="absolute hidden md:block md:opacity-70 lg:opacity-100 top-0 right-0">
+        <Image className="" src={topRight} alt="" />
       </div>
       <div className="flex justify-center items-center gap-3 mb-6">
         <Image src={logo} alt="CareerFlow Logo" width={40} height={40} />
@@ -43,7 +75,7 @@ export default function Register() {
           <h1 className="text-sm text-gray-500">OR</h1>
           <div className="h-[1px] w-full bg-gray-500"></div>
         </div>
-        <div className="flex flex-col gap-1 mt-3">
+        <form onSubmit={submitHandler} className="flex flex-col gap-1 mt-3">
           <label
             htmlFor="first-name"
             className="text-gray-700 font-medium text-start mt-3"
@@ -51,7 +83,7 @@ export default function Register() {
             <span className="text-red-500">*</span> First name
           </label>
           <input
-            type="first-name"
+            type="text"
             id="first-name"
             placeholder="john"
             value={firstName}
@@ -65,7 +97,7 @@ export default function Register() {
             <span className="text-red-500">*</span> Last name
           </label>
           <input
-            type="last-name"
+            type="text"
             id="last-name"
             placeholder="Doe"
             value={lastName}
@@ -100,19 +132,22 @@ export default function Register() {
             onChange={(e) => setPassword(e.target.value)}
             className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition"
           />
-        </div>
-        <h1 className="text-sm text-gray-500 mt-3 text-start">
-          <Link href="/login" className="">
-            Already have an account?{" "}
-            <span className="text-blue-500 hover:underline">Login</span>
-          </Link>
-        </h1>
-        <button className="w-full bg-blue-500 text-white font-medium py-3 rounded-md shadow-sm transition focus:ring-1 focus:ring-blue-500 hover:cursor-pointer hover:bg-blue-600 duration-150 mt-6">
-          Login
-        </button>
+          <h1 className="text-sm text-gray-500 mt-3 text-start">
+            <Link href="/login" className="">
+              Already have an account?{" "}
+              <span className="text-blue-500 hover:underline">Login</span>
+            </Link>
+          </h1>
+          <button
+            type="submit"
+            className="w-full bg-blue-500 text-white font-medium py-3 rounded-md shadow-sm transition focus:ring-1 focus:ring-blue-500 hover:cursor-pointer hover:bg-blue-600 duration-150 mt-6"
+          >
+            Login
+          </button>
+        </form>
       </div>
-      <div className="absolute bottom-0 left-0">
-        <Image src={bottomLeft} alt="" />
+      <div className="absolute hidden md:block md:opacity-70 lg:opacity-100 lg-opacity-85 bottom-0 left-0">
+        <Image className="" src={bottomLeft} alt="" />
       </div>
     </div>
   );
