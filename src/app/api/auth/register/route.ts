@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import { dbConnect } from "@/lib/db";
 import User from "@/models/user";
 import { registerSchema } from "@/types/user";
+
 export const POST = async (req: Request) => {
   await dbConnect();
 
