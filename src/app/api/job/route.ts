@@ -4,6 +4,23 @@ import { jobSchema } from "@/types/job";
 import mongoose from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
 
+export const GET = async () => {
+  try {
+    await dbConnect();
+    const jobs = await Job.find().populate("postedBy", "firstname email");
+    return NextResponse.json({ jobs }, { status: 200 });
+  } catch (error) {
+    return NextResponse.json(
+      {
+        status: "error",
+        message: "An error occurred while fetching jobs",
+        error: (error as Error).message,
+      },
+      { status: 500 }
+    );
+  }
+};
+
 export const POST = async (req: NextRequest) => {
   try {
     await dbConnect();
@@ -43,23 +60,6 @@ export const POST = async (req: NextRequest) => {
       message: "An error occurred while creating job",
       error: (error as Error).message,
     });
-  }
-};
-
-export const GET = async () => {
-  try {
-    await dbConnect();
-    const jobs = await Job.find().populate("postedBy", "firstname email");
-    return NextResponse.json({ jobs }, { status: 200 });
-  } catch (error) {
-    return NextResponse.json(
-      {
-        status: "error",
-        message: "An error occurred while fetching jobs",
-        error: (error as Error).message,
-      },
-      { status: 500 }
-    );
   }
 };
 
