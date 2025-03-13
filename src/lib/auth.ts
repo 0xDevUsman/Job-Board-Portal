@@ -8,7 +8,6 @@ import { dbConnect } from "@/lib/db"; // MongoDB connection
 
 export const authOptions: NextAuthOptions = {
   providers: [
-    // 🟢 Google OAuth Provider
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
@@ -18,7 +17,7 @@ export const authOptions: NextAuthOptions = {
       clientId: process.env.GITHUB_ID!,
       clientSecret: process.env.GITHUB_SECRET!,
     }),
-    // 🔐 Credentials (Email/Password)
+
     CredentialsProvider({
       name: "Credentials",
       credentials: {
@@ -30,8 +29,7 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        await dbConnect(); // Connect to MongoDB
-
+        await dbConnect();
         const user = await User.findOne({ email: credentials?.email }).select(
           "+password"
         );
@@ -39,7 +37,6 @@ export const authOptions: NextAuthOptions = {
           throw new Error("User not found");
         }
 
-        // Verify password
         const isValid = await bcrypt.compare(
           credentials!.password,
           user.password
@@ -50,13 +47,39 @@ export const authOptions: NextAuthOptions = {
 
         return {
           id: user._id.toString(),
-          name: user.name,
+          name: user.firstname,
           email: user.email,
-        }; // Return only safe user data
+        };
       },
     }),
   ],
   callbacks: {
+    async signIn({ user, account }) {
+      await dbConnect();
+      console.log("db connected");
+      if (account?.provider !== "credentials") {
+        const existingUser = await User.findOne({ email: user.email });
+
+        if (!existingUser) {
+          // If user does not exist, create a new one
+          const nameParts = user.name?.split(" ") || ["Unknown"];
+          const newUser = new User({
+            firstname: nameParts[0],
+            lastname: nameParts.length > 1 ? nameParts.slice(1).join(" ") : "",
+            email: user.email,
+            provider: account!.provider,
+          });
+          try {
+            console.log("New User Object: ", newUser);
+            await newUser.save();
+            console.log("User saved successfully.");
+          } catch (error) {
+            console.error("Error saving user:", error);
+          }
+        }
+      }
+      return true;
+    },
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
@@ -70,6 +93,7 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
   },
+
   session: {
     strategy: "jwt",
   },

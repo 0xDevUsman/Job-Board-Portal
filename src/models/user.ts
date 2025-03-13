@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import mongoose, { Schema, Document } from "mongoose";
 
 export interface IUser extends Document {
-  firstname: string;
-  lastname: string;
+  firstname?: string;
+  lastname?: string;
   email: string;
   password: string;
   createdAt: Date;
@@ -10,10 +11,21 @@ export interface IUser extends Document {
 
 const UserSchema: Schema = new Schema(
   {
-    firstname: { type: String, required: true },
-    lastname: { type: String, required: true },
+    firstname: { type: String, required: false }, // Make optional
+    lastname: { type: String, required: false }, // Make optional
     email: { type: String, required: true, unique: true },
-    password: { type: String, required: true, select: false },
+    password: {
+      type: String,
+      required: function (this: any): boolean {
+        return this.provider === "credentials"; // Required only for email/password signups
+      },
+      select: false,
+    },
+    provider: {
+      type: String,
+      enum: ["credentials", "google", "github"],
+      default: "credentials",
+    },
   },
   { timestamps: true }
 );

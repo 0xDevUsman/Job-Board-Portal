@@ -46,6 +46,24 @@ export default function Register() {
     }
   };
 
+  const googleSignIn = async () => {
+    try {
+      await signIn("google", { callbackUrl: "/" });
+    } catch (error) {
+      console.error("Google login failed:", error);
+      toast.error("Google login failed. Please try again.");
+    }
+  };
+
+  const githubSignIn = async () => {
+    try {
+      await signIn("github", { callbackUrl: "/" });
+    } catch (error) {
+      console.error("Github login failed:", error);
+      toast.error("Github login failed. Please try again.");
+    }
+  };
+
   return (
     <div className="relative flex flex-col items-center justify-center min-h-screen bg-[#F5FAFF] px-4">
       <div className="absolute hidden md:block md:opacity-70 lg:opacity-100 top-0 right-0">
@@ -57,14 +75,14 @@ export default function Register() {
       </div>
       <div className="bg-white shadow-xl rounded-lg p-8 w-full max-w-sm text-center">
         <button
-          onClick={() => signIn("google")}
+          onClick={() => googleSignIn()}
           className="w-full flex items-center justify-center gap-3 bg-white border border-gray-300 shadow-sm text-gray-700 font-medium px-4 py-3 rounded-md transition focus:ring-1 focus:ring-blue-500 hover:cursor-pointer hover:border-blue-500 duration-150"
         >
           <Image src={google} alt="Google Logo" width={20} height={20} />
           Sign in with Google
         </button>
         <button
-          onClick={() => signIn("github")}
+          onClick={() => githubSignIn()}
           className="w-full flex items-center justify-center gap-3 bg-white border border-gray-300 shadow-sm text-gray-700 font-medium px-4 py-3 rounded-md transition focus:ring-1 focus:ring-blue-500 hover:cursor-pointer hover:border-blue-500 duration-150 mt-4"
         >
           <Image src={github} alt="Google Logo" width={20} height={20} />
