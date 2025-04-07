@@ -65,8 +65,8 @@ const SpecificJob: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
-      <div className="bg-white shadow-md rounded-lg p-6 max-w-6xl w-full">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-white p-4">
+      <div className="bg-white  rounded-lg p-6 max-w-6xl w-full">
         <div className="flex justify-between items-start mb-4">
           <div>
             <h1 className="text-3xl font-bold pb-1">{job.title}</h1>
