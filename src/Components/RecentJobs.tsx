@@ -57,6 +57,7 @@ const RecentJobs: React.FC = () => {
           jobs.map((job) => (
             <JobCard
               key={job._id}
+              _id={job._id}
               title={job.title}
               company={job.company}
               location={job.location}

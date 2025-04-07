@@ -6,10 +6,11 @@ const Navbar = () => {
   return (
     <>
       <div className="w-full h-16 bg-white flex items-center justify-around shadow-lg px-16 py-2">
-        <div className="flex items-center gap-4">
-          <Image width={40} height={40} src={logo} alt="" />
+        <Link href="/" className="flex items-center gap-4">
+          <Image width={40} height={40} src={logo} alt="Logo" />
           <h1 className="text-2xl text-blue-600 font-bold">CAREER FLOW</h1>
-        </div>
+        </Link>
+
         <div className="flex justify-center items-center gap-10">
           <div className="flex justify-center items-center gap-6">
             <Link className="text-gray-600" href={"/jobs"}>

@@ -16,7 +16,6 @@ import HowItWorks from "@/Components/HowItWorks";
 import testmonial from "@/assets/testmonial/testimonial-founder.png";
 import WhatWeAreDoing from "@/Components/WhatWeAreDoing";
 import RecentNews from "@/Components/RecentNews";
-import Footer from "@/Components/Footer";
 import RecentJobs from "@/Components/RecentJobs";
 const page = () => {
   return (
@@ -118,7 +117,6 @@ const page = () => {
       <div>
         <RecentNews />
       </div>
-      <Footer />
     </>
   );
 };
