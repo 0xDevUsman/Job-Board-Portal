@@ -22,7 +22,7 @@ const RecentNews = () => {
     <div className="py-16 px-4 bg-white">
       {/* Heading Section */}
       <div className="text-center mb-12">
-        <h3 className="text-pink-500 text-lg font-medium uppercase tracking-wide mb-2">
+        <h3 className="text-blue-500 text-lg font-medium uppercase tracking-wide mb-2">
           Our latest blog
         </h3>
         <h1 className="text-4xl md:text-5xl font-bold text-gray-900">

@@ -28,7 +28,7 @@ const HowItWorks = () => {
 
   return (
     <div
-      className="mx-auto px-4 py-10 mt-10 h-[600px]"
+      className="mx-auto px-4 py-10 h-[600px]"
       style={{
         backgroundImage:
           "url('https://themewagon.github.io/jobfinderportal/assets/img/gallery/how-applybg.png')",
@@ -37,7 +37,7 @@ const HowItWorks = () => {
       }}
     >
       {/* Heading Section */}
-      <h1 className="text-xl text-center text-pink-500 mt-10">Apply process</h1>
+      <h1 className="text-xl text-center text-blue-500 mt-10">Apply process</h1>
       <h1 className="text-5xl text-white font-semibold text-center mt-4">
         How it works
       </h1>

@@ -44,7 +44,7 @@ const JobCard: React.FC<JobCardProps> = ({
       <div className="text-gray-600 text-sm mx-4">{salary}</div>
 
       <div className="ml-4">
-        <button className="flex gap-1 items-center px-3 py-1 bg-indigo-100 text-slate-700 rounded-full text-sm font-medium">
+        <button className="flex gap-1 items-center px-3 py-1 bg-blue-100 text-slate-700 rounded-full text-sm font-medium">
           {jobType}
         </button>
       </div>

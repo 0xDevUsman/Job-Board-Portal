@@ -18,6 +18,48 @@ import WhatWeAreDoing from "@/Components/WhatWeAreDoing";
 import RecentNews from "@/Components/RecentNews";
 import RecentJobs from "@/Components/RecentJobs";
 const page = () => {
+  const categoriesCard = [
+    {
+      name: "Design & Creative",
+      number: 192,
+      icon: FaUserTie,
+    },
+    {
+      name: "Design & Development",
+      number: 265,
+      icon: FaComputer,
+    },
+    {
+      name: "Sales & Marketing",
+      number: 189,
+      icon: FaRegChartBar,
+    },
+    {
+      name: "Mobile Application",
+      number: 234,
+      icon: CiMobile3,
+    },
+    {
+      name: "Construction",
+      number: 784,
+      icon: MdConstruction,
+    },
+    {
+      name: "Information Technology",
+      number: 898,
+      icon: GrTechnology,
+    },
+    {
+      name: "Real Estate",
+      number: 23,
+      icon: MdOutlineRealEstateAgent,
+    },
+    {
+      name: "Content Writer",
+      number: 121,
+      icon: TbBooks,
+    },
+  ];
   return (
     <>
       <div className="relative flex items-center justify-center w-full h-full bg-gray-100">
@@ -42,42 +84,14 @@ const page = () => {
         </h1>
         <div className="flex justify-center items-center w-full">
           <div className="flex justify-between flex-wrap w-[80%] gap-10 mt-10">
-            <CategoriesCard
-              name="Design & Creative"
-              number={192}
-              icon={FaUserTie}
-            />
-            <CategoriesCard
-              name="Design & Development"
-              number={265}
-              icon={FaComputer}
-            />
-            <CategoriesCard
-              name="Sales & Marketing"
-              number={189}
-              icon={FaRegChartBar}
-            />
-            <CategoriesCard
-              name="Mobile Application"
-              number={234}
-              icon={CiMobile3}
-            />
-            <CategoriesCard
-              name="Construction"
-              number={784}
-              icon={MdConstruction}
-            />
-            <CategoriesCard
-              name="Information Technology"
-              number={898}
-              icon={GrTechnology}
-            />
-            <CategoriesCard
-              name="Real Estate"
-              number={23}
-              icon={MdOutlineRealEstateAgent}
-            />
-            <CategoriesCard name="Content Writer" number={121} icon={TbBooks} />
+            {categoriesCard.map((item, index) => (
+              <CategoriesCard
+                key={index}
+                name={item.name}
+                number={item.number}
+                icon={item.icon}
+              />
+            ))}
           </div>
         </div>
         <div className="flex justify-center items-center w-full mt-16">

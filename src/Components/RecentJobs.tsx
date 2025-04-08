@@ -39,7 +39,7 @@ const RecentJobs: React.FC = () => {
   }, []);
 
   return (
-    <div className="mx-auto px-4 py-10 mt-5">
+    <div className="mx-auto px-4 py-10 mb-10 mt-5">
       <h1 className="text-base font-bold text-center text-blue-500 mt-10">
         RECENT JOB
       </h1>

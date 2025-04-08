@@ -73,7 +73,7 @@ const FilterComponent = () => {
               type="checkbox"
               checked={remote}
               onChange={(e) => setRemote(e.target.checked)}
-              className="h-4 w-4 p-2 text-indigo-600 border-gray-300 rounded"
+              className="h-4 w-4 p-2 text-blue-600 border-gray-300 rounded"
             />
             <span className="ml-2 text-sm text-gray-700">Remote (Only)</span>
           </div>
@@ -118,7 +118,7 @@ const FilterComponent = () => {
 
         <button
           onClick={handleClearAll}
-          className="w-full mt-4 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-indigo-600 bg-indigo-50 hover:bg-indigo-100 focus:outline-none"
+          className="w-full mt-4 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 focus:outline-none"
         >
           Clear all
         </button>
@@ -159,8 +159,7 @@ const JobListing = ({
       <div>
         <h3 className="text-lg font-semibold">{title}</h3>
         <p className="text-gray-600">
-          {company}{" "}
-          <span className="text-indigo-600 ml-2">Actively hiring</span>
+          {company} <span className="text-blue-600 ml-2">Actively hiring</span>
         </p>
         <div className="text-sm text-gray-500">
           <span>{location}</span> | <span>₹ {salary}</span>
@@ -226,7 +225,7 @@ const Jobs = () => {
                 className={`px-4 py-2 rounded-md ${
                   currentPage <= 1
                     ? "bg-gray-200 text-gray-700 cursor-not-allowed"
-                    : "bg-indigo-600 text-white cursor-pointer"
+                    : "bg-blue-600 text-white cursor-pointer"
                 }`}
                 disabled={currentPage === 1}
                 onClick={() => setCurrentPage((prev) => prev - 1)}
@@ -239,7 +238,7 @@ const Jobs = () => {
                   onClick={() => setCurrentPage(i + 1)}
                   className={`px-4 py-2 rounded-md cursor-pointer ${
                     currentPage === i + 1
-                      ? "bg-indigo-600 text-white"
+                      ? "bg-blue-600 text-white"
                       : "bg-gray-200 text-gray-700"
                   }`}
                 >
@@ -250,7 +249,7 @@ const Jobs = () => {
                 className={`px-4 py-2 rounded-md ${
                   currentPage === totalPages
                     ? "bg-gray-200 text-gray-700 cursor-not-allowed"
-                    : "bg-indigo-600 text-white cursor-pointer"
+                    : "bg-blue-600 text-white cursor-pointer"
                 }`}
                 disabled={currentPage === totalPages}
                 onClick={() => setCurrentPage((prev) => prev + 1)}
