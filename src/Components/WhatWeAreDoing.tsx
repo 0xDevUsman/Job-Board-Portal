@@ -33,7 +33,7 @@ const WhatWeAreDoing = () => {
           </p>
 
           {/* Button */}
-          <button className="bg-blue-500 text-white px-6 py-3 font-medium hover:bg-blue-600 cursor-pointer rounded-md transition">
+          <button className="bg-blue-500 text-white px-6 py-3 font-medium hover:bg-blue-500 cursor-pointer rounded-md transition">
             Post A Job
           </button>
         </div>

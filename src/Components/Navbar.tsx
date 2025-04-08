@@ -39,7 +39,7 @@ const Navbar: React.FC = () => {
               <Link href="/">
                 <button
                   onClick={() => signOut()}
-                  className="cursor-pointer font-semibold border border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white px-6 py-2 rounded-full transition-all duration-100"
+                  className="cursor-pointer font-semibold border border-blue-600 text-blue-600 hover:bg-blue-500 hover:text-white px-6 py-2 rounded-full transition-all duration-100"
                 >
                   Logout
                 </button>
@@ -83,7 +83,7 @@ const Navbar: React.FC = () => {
             </div>
             <div className="flex justify-center items-center gap-4">
               <Link href="/login">
-                <button className="cursor-pointer font-semibold border border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white px-6 py-2 rounded-full transition-all duration-100">
+                <button className="cursor-pointer font-semibold border border-blue-600 text-blue-600 hover:bg-blue-500 hover:text-white px-6 py-2 rounded-full transition-all duration-100">
                   Login
                 </button>
               </Link>

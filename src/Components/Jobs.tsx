@@ -225,7 +225,7 @@ const Jobs = () => {
                 className={`px-4 py-2 rounded-md ${
                   currentPage <= 1
                     ? "bg-gray-200 text-gray-700 cursor-not-allowed"
-                    : "bg-blue-600 text-white cursor-pointer"
+                    : "bg-blue-500 text-white cursor-pointer"
                 }`}
                 disabled={currentPage === 1}
                 onClick={() => setCurrentPage((prev) => prev - 1)}
@@ -238,7 +238,7 @@ const Jobs = () => {
                   onClick={() => setCurrentPage(i + 1)}
                   className={`px-4 py-2 rounded-md cursor-pointer ${
                     currentPage === i + 1
-                      ? "bg-blue-600 text-white"
+                      ? "bg-blue-500 text-white"
                       : "bg-gray-200 text-gray-700"
                   }`}
                 >
@@ -249,7 +249,7 @@ const Jobs = () => {
                 className={`px-4 py-2 rounded-md ${
                   currentPage === totalPages
                     ? "bg-gray-200 text-gray-700 cursor-not-allowed"
-                    : "bg-blue-600 text-white cursor-pointer"
+                    : "bg-blue-500 text-white cursor-pointer"
                 }`}
                 disabled={currentPage === totalPages}
                 onClick={() => setCurrentPage((prev) => prev + 1)}

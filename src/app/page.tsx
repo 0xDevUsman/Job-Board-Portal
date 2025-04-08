@@ -69,7 +69,7 @@ const page = () => {
             Find the most exciting <br /> startup jobs.{" "}
           </h1>
           <Link href={"/jobs"}>
-            <span className="px-6 py-4 text-lg font-semibold text-white bg-blue-500 rounded-full hover:bg-blue-600">
+            <span className="px-6 py-4 text-lg font-semibold text-white bg-blue-500 rounded-full hover:bg-blue-500">
               Explore Jobs
             </span>
           </Link>
@@ -96,7 +96,7 @@ const page = () => {
         </div>
         <div className="flex justify-center items-center w-full mt-16">
           <Link href={"/jobs"}>
-            <span className="px-6 py-4 text-lg border border-blue-500 font-semibold text-blue-500 hover:text-white hover:bg-blue-600 transform-border transition-all duration-100 rounded-full ">
+            <span className="px-6 py-4 text-lg border border-blue-500 font-semibold text-blue-500 hover:text-white hover:bg-blue-500 transform-border transition-all duration-100 rounded-full ">
               Explore Jobs
             </span>
           </Link>

@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import axios, { AxiosError } from "axios";
+import Link from "next/link";
 
 interface Job {
   _id: string;
@@ -145,12 +146,13 @@ const SpecificJob: React.FC = () => {
             specified • Joining since: Not specified
           </p>
         </div>
-
-        <div className="mt-6 text-center">
-          <button className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">
-            Apply now
-          </button>
-        </div>
+        <Link href={"/application"}>
+          <div className="mt-6 text-center">
+            <button className="bg-blue-500 cursor-pointer text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition duration-200">
+              Apply now
+            </button>
+          </div>
+        </Link>
       </div>
     </div>
   );

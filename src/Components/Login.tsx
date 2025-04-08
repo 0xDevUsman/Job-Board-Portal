@@ -120,7 +120,7 @@ export default function Login() {
             </Link>
             <button
               type="submit"
-              className="w-full bg-blue-500 text-white font-medium py-3 rounded-md shadow-sm transition focus:ring-1 focus:ring-blue-500 hover:cursor-pointer hover:bg-blue-600 duration-150 mt-6"
+              className="w-full bg-blue-500 text-white font-medium py-3 rounded-md shadow-sm transition focus:ring-1 focus:ring-blue-500 hover:cursor-pointer hover:bg-blue-500 duration-150 mt-6"
             >
               Login
             </button>
