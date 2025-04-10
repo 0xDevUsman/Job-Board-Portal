@@ -2,36 +2,43 @@
 import React, { useState } from "react";
 import { useParams } from "next/navigation";
 import { useSession } from "next-auth/react";
+import axios from "axios";
 
 const JobApplicationPage: React.FC = () => {
-  const [formData, setFormData] = useState({
-    fullName: "",
-    email: "",
-    phone: "",
-    coverLetter: "",
-    resume: null as File | null,
+  // Define formData with proper types
+  const [formData, setFormData] = useState<{
+    jobId: string; // We'll ensure it's a string in the logic
+    userId: string; // We'll ensure it's a string in the logic
+    resume: File | null;
+  }>({
+    jobId: "",
+    userId: "",
+    resume: null,
   });
+
   const params = useParams();
-  const { id } = params;
-  const jobId = id;
+  const { id } = params; // id can be string | string[] | undefined
+  const jobId = Array.isArray(id) ? id[0] : id || ""; // Ensure it's a string
 
   const { data: session } = useSession();
-  const userId = session?.user?.id;
-  console.log(userId);
+  const userId = session?.user?.id || ""; // Ensure it's a string, default to "" if undefined
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
+  // Handle resume file input
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setFormData((prev) => ({ ...prev, resume: e.target.files![0] }));
+    const file = e.target.files?.[0];
+    if (file && file.type === "application/pdf") {
+      setFormData((prev) => ({
+        ...prev,
+        resume: file,
+        jobId: jobId, // Use the resolved jobId
+        userId: userId, // Use the resolved userId
+      }));
+    } else {
+      alert("Please upload a valid PDF file.");
     }
   };
 
+  // Handle form submission with Axios
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -40,38 +47,32 @@ const JobApplicationPage: React.FC = () => {
       return;
     }
 
+    if (!formData.jobId || !formData.userId) {
+      alert("Job ID or User ID is missing.");
+      return;
+    }
+
     try {
-      const resumeText = await formData.resume.text();
+      // Create FormData for file upload
+      const payload = new FormData();
+      payload.append("jobId", formData.jobId);
+      payload.append("userId", formData.userId);
+      payload.append("resume", formData.resume);
 
-      const payload = {
-        jobId,
-        userId,
-        resume: resumeText,
-        coverLetter: formData.coverLetter,
-      };
-
-      const res = await fetch("/api/applications", {
-        method: "POST",
+      // Send request to backend
+      const response = await axios.post("/api/applications", payload, {
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "multipart/form-data",
         },
-        body: JSON.stringify(payload),
       });
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.message || "Something went wrong");
-      }
-
       alert("Application submitted successfully!");
-      console.log("API Response:", data);
+      console.log("Permanent resume URL:", response.data.application.resume);
 
+      // Reset form
       setFormData({
-        fullName: "",
-        email: "",
-        phone: "",
-        coverLetter: "",
+        jobId: "",
+        userId: "",
         resume: null,
       });
     } catch (error) {
@@ -88,99 +89,24 @@ const JobApplicationPage: React.FC = () => {
             Apply for Job
           </h2>
           <p className="text-gray-600 mb-8">
-            Please fill out the form below with your details to apply for the
-            position.
+            Please fill out the form below to apply for the position.
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label
-                htmlFor="fullName"
-                className="block text-sm font-medium text-gray-700 mb-2"
-              >
-                Full Name <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                id="fullName"
-                name="fullName"
-                value={formData.fullName}
-                onChange={handleChange}
-                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 placeholder-gray-500 text-gray-700"
-                placeholder="Enter your full name"
-                required
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700 mb-2"
-              >
-                Email <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 placeholder-gray-500 text-gray-700"
-                placeholder="Enter your email"
-                required
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor="phone"
-                className="block text-sm font-medium text-gray-700 mb-2"
-              >
-                Phone <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="tel"
-                id="phone"
-                name="phone"
-                value={formData.phone}
-                onChange={handleChange}
-                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 placeholder-gray-500 text-gray-700"
-                placeholder="Enter your phone number"
-                required
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor="coverLetter"
-                className="block text-sm font-medium text-gray-700 mb-2"
-              >
-                Cover Letter
-              </label>
-              <textarea
-                id="coverLetter"
-                name="coverLetter"
-                value={formData.coverLetter}
-                onChange={handleChange}
-                className="w-full h-32 p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 placeholder-gray-500 text-gray-700"
-                placeholder="Write your cover letter here"
-              ></textarea>
-            </div>
-
-            <div>
-              <label
                 htmlFor="resume"
                 className="block text-sm font-medium text-gray-700 mb-2"
               >
-                Upload Resume <span className="text-red-500">*</span>
+                Resume (PDF) <span className="text-red-500">*</span>
               </label>
               <input
                 type="file"
                 id="resume"
                 name="resume"
+                accept="application/pdf"
                 onChange={handleFileChange}
                 className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 text-gray-700"
-                accept=".pdf,.doc,.docx"
                 required
               />
               {formData.resume && (
@@ -192,13 +118,7 @@ const JobApplicationPage: React.FC = () => {
 
             <button
               type="submit"
-              className="w-full bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-600 transition duration-200 font-medium text-lg"
-              disabled={
-                !formData.fullName ||
-                !formData.email ||
-                !formData.phone ||
-                !formData.resume
-              }
+              className="w-full cursor-pointer bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-600 transition duration-200 font-medium text-lg"
             >
               Submit Application
             </button>
