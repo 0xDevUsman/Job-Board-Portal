@@ -80,9 +80,19 @@ export const authOptions: NextAuthOptions = {
       }
       return true;
     },
-    async jwt({ token, user }) {
+    async jwt({ token, user, account }) {
       if (user) {
-        token.id = user.id;
+        if (account?.provider === "credentials") {
+          // For credentials, user.id is already MongoDB _id
+          token.id = user.id;
+        } else {
+          // For OAuth providers (Google, GitHub), find user in DB
+          await dbConnect();
+          const existingUser = await User.findOne({ email: user.email });
+          if (existingUser) {
+            token.id = existingUser._id.toString(); // Store MongoDB _id in token
+          }
+        }
       }
       return token;
     },

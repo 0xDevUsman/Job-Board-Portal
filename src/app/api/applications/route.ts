@@ -37,6 +37,22 @@ export const POST = async (req: NextRequest) => {
       );
     }
 
+    const user = await mongoose
+      .model("User")
+      .findById(userId)
+      .select("firstname email");
+
+    if (!user) {
+      return NextResponse.json({ message: "User not found" }, { status: 404 });
+    }
+    const job = await mongoose
+      .model("Job")
+      .findById(jobId)
+      .select("title company");
+    if (!job) {
+      return NextResponse.json({ message: "Job not found" }, { status: 404 });
+    }
+
     const application = new Application({
       jobId,
       userId,

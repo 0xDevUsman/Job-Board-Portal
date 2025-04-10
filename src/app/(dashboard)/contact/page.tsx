@@ -38,7 +38,7 @@ const ContactPage: React.FC = () => {
             </div>
             <button
               type="submit"
-              className="w-full cursor-pointer bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-500 transition duration-200 font-medium text-lg"
+              className="w-full cursor-pointer bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-600 transition duration-200 font-medium text-lg"
             >
               SEND
             </button>

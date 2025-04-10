@@ -1,5 +1,7 @@
 "use client";
 import React, { useState } from "react";
+import { useParams } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 const JobApplicationPage: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -9,6 +11,13 @@ const JobApplicationPage: React.FC = () => {
     coverLetter: "",
     resume: null as File | null,
   });
+  const params = useParams();
+  const { id } = params;
+  const jobId = id;
+
+  const { data: session } = useSession();
+  const userId = session?.user?.id;
+  console.log(userId);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -23,19 +32,52 @@ const JobApplicationPage: React.FC = () => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Add form submission logic here (e.g., API call)
-    console.log("Form submitted:", formData);
-    alert("Application submitted successfully!");
-    // Reset form after submission
-    setFormData({
-      fullName: "",
-      email: "",
-      phone: "",
-      coverLetter: "",
-      resume: null,
-    });
+
+    if (!formData.resume) {
+      alert("Resume is required.");
+      return;
+    }
+
+    try {
+      const resumeText = await formData.resume.text();
+
+      const payload = {
+        jobId,
+        userId,
+        resume: resumeText,
+        coverLetter: formData.coverLetter,
+      };
+
+      const res = await fetch("/api/applications", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || "Something went wrong");
+      }
+
+      alert("Application submitted successfully!");
+      console.log("API Response:", data);
+
+      setFormData({
+        fullName: "",
+        email: "",
+        phone: "",
+        coverLetter: "",
+        resume: null,
+      });
+    } catch (error) {
+      console.error("Submission error:", error);
+      alert(`Submission failed: ${(error as Error).message}`);
+    }
   };
 
   return (

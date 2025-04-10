@@ -146,9 +146,12 @@ const SpecificJob: React.FC = () => {
             specified • Joining since: Not specified
           </p>
         </div>
-        <Link href={"/application"}>
+        <Link href={`/apply/${id}`}>
           <div className="mt-6 text-center">
-            <button className="bg-blue-500 cursor-pointer text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition duration-200">
+            <button
+              type="button"
+              className="bg-blue-500 cursor-pointer text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition duration-200"
+            >
               Apply now
             </button>
           </div>
