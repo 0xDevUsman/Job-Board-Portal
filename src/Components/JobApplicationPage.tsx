@@ -1,14 +1,14 @@
 "use client";
 import React, { useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const JobApplicationPage: React.FC = () => {
-  // Define formData with proper types
   const [formData, setFormData] = useState<{
-    jobId: string; // We'll ensure it's a string in the logic
-    userId: string; // We'll ensure it's a string in the logic
+    jobId: string;
+    userId: string;
     resume: File | null;
   }>({
     jobId: "",
@@ -17,67 +17,71 @@ const JobApplicationPage: React.FC = () => {
   });
 
   const params = useParams();
-  const { id } = params; // id can be string | string[] | undefined
-  const jobId = Array.isArray(id) ? id[0] : id || ""; // Ensure it's a string
+  const router = useRouter();
+
+  const { id } = params;
+  const jobId = Array.isArray(id) ? id[0] : id || "";
 
   const { data: session } = useSession();
-  const userId = session?.user?.id || ""; // Ensure it's a string, default to "" if undefined
+  const userId = session?.user?.id || "";
 
-  // Handle resume file input
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file && file.type === "application/pdf") {
       setFormData((prev) => ({
         ...prev,
         resume: file,
-        jobId: jobId, // Use the resolved jobId
-        userId: userId, // Use the resolved userId
+        jobId: jobId,
+        userId: userId,
       }));
     } else {
-      alert("Please upload a valid PDF file.");
+      toast.error("Please upload a valid PDF file.");
     }
   };
 
-  // Handle form submission with Axios
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!formData.resume) {
-      alert("Resume is required.");
+      toast.error("Resume is required.");
       return;
     }
 
     if (!formData.jobId || !formData.userId) {
-      alert("Job ID or User ID is missing.");
+      toast.error("Job ID or User ID is missing.");
       return;
     }
 
     try {
-      // Create FormData for file upload
       const payload = new FormData();
       payload.append("jobId", formData.jobId);
       payload.append("userId", formData.userId);
       payload.append("resume", formData.resume);
 
-      // Send request to backend
-      const response = await axios.post("/api/applications", payload, {
+      const response = await axios.post("/api/apply", payload, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
 
-      alert("Application submitted successfully!");
-      console.log("Permanent resume URL:", response.data.application.resume);
+      if (response.status !== 200) {
+        throw new Error("Failed to upload resume");
+      }
 
-      // Reset form
+      toast.success("Thanks for applying!");
+
       setFormData({
         jobId: "",
         userId: "",
         resume: null,
       });
+
+      setTimeout(() => {
+        router.push("/");
+      }, 1500);
     } catch (error) {
       console.error("Submission error:", error);
-      alert(`Submission failed: ${(error as Error).message}`);
+      toast.error("Submission failed. Please try again.");
     }
   };
 
