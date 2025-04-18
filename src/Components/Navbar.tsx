@@ -7,8 +7,8 @@ import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
 
 const Navbar: React.FC = () => {
-  const { status } = useSession();
-
+  const { status, data: session } = useSession();
+  const userId = session?.user?.id;
   const isLoggedIn = status === "authenticated";
 
   return (
@@ -45,7 +45,7 @@ const Navbar: React.FC = () => {
                 </button>
               </Link>
               <Link
-                href={"/profile"}
+                href={`/profile/${userId}`}
                 className="flex justify-center items-center"
               >
                 <svg

@@ -77,7 +77,7 @@ const JobApplicationPage: React.FC = () => {
       });
 
       setTimeout(() => {
-        router.push("/");
+        router.push(`/profile/${userId}`);
       }, 1500);
     } catch (error) {
       console.error("Submission error:", error);

@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import cloudinary from "@/lib/cloudinary";
 import { dbConnect } from "@/lib/db";
 import apply from "@/models/application";
+import mongoose from "mongoose";
 
 // Helper to convert FormData File to Buffer
 async function fileToBuffer(file: File): Promise<Buffer> {
@@ -21,8 +22,10 @@ export async function POST(req: NextRequest) {
     // Parse form data
     const formData = await req.formData();
     const file = formData.get("resume") as File;
-    const jobId = formData.get("jobId") as string;
-    const userId = formData.get("userId") as string;
+    const jobId = new mongoose.Types.ObjectId(formData.get("jobId") as string);
+    const userId = new mongoose.Types.ObjectId(
+      formData.get("userId") as string
+    );
 
     if (!file || !jobId || !userId) {
       return NextResponse.json(
