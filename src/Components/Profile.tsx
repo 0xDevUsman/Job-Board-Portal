@@ -3,6 +3,8 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { FaUser } from "react-icons/fa";
 import { useSession } from "next-auth/react";
+import { MdDelete } from "react-icons/md";
+
 const Profile: React.FC = () => {
   const { data: session } = useSession();
   const id = session?.user?.id;
@@ -59,15 +61,20 @@ const Profile: React.FC = () => {
               {user?.applications?.map((app, index) => (
                 <div
                   key={index}
-                  className="bg-gray-50 p-5 rounded-lg shadow-sm hover:shadow-md transition"
+                  className="flex justify-between items-center bg-gray-50 p-3 rounded-lg shadow-sm hover:shadow-md transition"
                 >
-                  <h3 className="text-base font-medium text-gray-800">
-                    {app.title}
-                  </h3>
-                  <p className="text-sm text-gray-500">{app.company}</p>
-                  <p className="text-xs text-gray-400 mt-1">
-                    Applied on {app.dateApplied}
-                  </p>
+                  <div>
+                    <h3 className="text-base font-medium text-gray-800">
+                      {app.title}
+                    </h3>
+                    <p className="text-sm text-gray-500">{app.company}</p>
+                    <p className="text-xs text-gray-400 mt-1">
+                      Applied on {app.dateApplied}
+                    </p>
+                  </div>
+                  <div className="text-red-500 cursor-pointer">
+                    <MdDelete className="w-6 h-6" />
+                  </div>
                 </div>
               ))}
             </div>
