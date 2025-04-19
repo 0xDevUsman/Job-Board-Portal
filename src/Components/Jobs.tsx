@@ -3,7 +3,17 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 
-const FilterComponent = () => {
+const FilterComponent = ({
+  onFilterChange,
+}: {
+  onFilterChange: (filters: {
+    profile: string;
+    location: string;
+    remote: boolean;
+    salary: number;
+    sortBy: string;
+  }) => void;
+}) => {
   const [profile, setProfile] = useState("");
   const [location, setLocation] = useState("");
   const [remote, setRemote] = useState(false);
@@ -17,6 +27,10 @@ const FilterComponent = () => {
     setSalary(0);
     setSortBy("relevance");
   };
+
+  useEffect(() => {
+    onFilterChange({ profile, location, remote, salary, sortBy });
+  }, [profile, location, remote, salary, sortBy]);
 
   return (
     <div className="max-w-md p-6 bg-white shadow-md rounded-lg">
@@ -81,23 +95,24 @@ const FilterComponent = () => {
 
         <div>
           <label className="block text-sm font-medium text-gray-700">
-            Annual salary (in lakhs)
+            Monthly salary (in thousands)
           </label>
           <input
             type="range"
             min="0"
-            max="10"
+            max="100"
+            step="5"
             value={salary}
             onChange={(e) => setSalary(Number(e.target.value))}
             className="mt-1 w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
           />
           <div className="flex justify-between text-xs text-gray-500 mt-1">
             <span>0</span>
-            <span>2</span>
-            <span>4</span>
-            <span>6</span>
-            <span>8</span>
-            <span>10</span>
+            <span>20k</span>
+            <span>40k</span>
+            <span>60k</span>
+            <span>80k</span>
+            <span>100k</span>
           </div>
         </div>
 
@@ -133,7 +148,7 @@ interface JobListingProps {
   company: string;
   location: string;
   experience: string;
-  salary: string;
+  salary: string | number;
   timeAgo: string;
 }
 
@@ -141,9 +156,9 @@ const onClickJob = async (_id: string) => {
   const res = await axios.get(`/api/job/${_id}`);
   const job = res.data.job;
   console.log(job);
-  // Navigate to job detail page
   window.location.href = `/jobs/${_id}`;
 };
+
 const JobListing = ({
   _id,
   title,
@@ -184,83 +199,141 @@ const JobListing = ({
 
 const Jobs = () => {
   const [jobListings, setJobListing] = useState<JobListingProps[]>([]);
+  const [filteredJobs, setFilteredJobs] = useState<JobListingProps[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const jobsPerPage = 5;
+
   const indexOfLastJob = currentPage * jobsPerPage;
   const indexOfFirstJob = indexOfLastJob - jobsPerPage;
-  const currentJobs = jobListings.slice(indexOfFirstJob, indexOfLastJob);
-  const totalPages = Math.ceil(jobListings.length / jobsPerPage);
+  const currentJobs = filteredJobs.slice(indexOfFirstJob, indexOfLastJob);
+  const totalPages = Math.ceil(filteredJobs.length / jobsPerPage);
 
   const getJob = async () => {
     const res = await axios.get("/api/job");
-    const jobs = res.data.jobs;
-    setJobListing(jobs);
+    setJobListing(res.data.jobs);
+    setFilteredJobs(res.data.jobs);
   };
 
   useEffect(() => {
     getJob();
   }, []);
+
+  const handleFilterChange = (filters: {
+    profile: string;
+    location: string;
+    remote: boolean;
+    salary: number;
+    sortBy: string;
+  }) => {
+    let filtered = [...jobListings];
+
+    if (filters.profile) {
+      filtered = filtered.filter((job) =>
+        job.title.toLowerCase().includes(filters.profile.toLowerCase())
+      );
+    }
+
+    if (filters.location) {
+      filtered = filtered.filter((job) =>
+        job.location.toLowerCase().includes(filters.location.toLowerCase())
+      );
+    }
+
+    if (filters.remote) {
+      filtered = filtered.filter((job) =>
+        job.location.toLowerCase().includes("remote")
+      );
+    }
+
+    if (filters.salary > 0) {
+      filtered = filtered.filter((job) => {
+        const jobSalary =
+          typeof job.salary === "string"
+            ? Number(String(job.salary).replace(/[^\d]/g, ""))
+            : typeof job.salary === "number"
+            ? job.salary
+            : 0;
+        return jobSalary >= filters.salary * 1000;
+      });
+    }
+
+    if (filters.sortBy === "salary") {
+      filtered.sort((a, b) => {
+        const salaryA =
+          typeof a.salary === "string"
+            ? Number(String(a.salary).replace(/[^\d]/g, ""))
+            : a.salary;
+        const salaryB =
+          typeof b.salary === "string"
+            ? Number(String(b.salary).replace(/[^\d]/g, ""))
+            : b.salary;
+        return salaryB - salaryA;
+      });
+    }
+
+    setCurrentPage(1);
+    setFilteredJobs(filtered);
+  };
+
   return (
-    <>
-      <div className="max-w-7xl mx-auto p-6">
-        <div className="w-full flex justify-center items-start mt-10">
-          <div className="w-1/3 p-4">
-            <FilterComponent />
-          </div>
-          <div className="w-2/3 p-4">
-            {currentJobs.map((job, index) => (
-              <JobListing
-                _id={job._id}
-                key={index}
-                title={job.title}
-                company={job.company}
-                location={job.location}
-                experience={job.experience}
-                salary={job.salary}
-                timeAgo={job.timeAgo}
-              />
+    <div className="max-w-7xl mx-auto p-6">
+      <div className="w-full flex justify-center items-start mt-10">
+        <div className="w-1/3 p-4">
+          <FilterComponent onFilterChange={handleFilterChange} />
+        </div>
+        <div className="w-2/3 p-4">
+          {currentJobs.map((job, index) => (
+            <JobListing
+              _id={job._id}
+              key={index}
+              title={job.title}
+              company={job.company}
+              location={job.location}
+              experience={job.experience}
+              salary={job.salary}
+              timeAgo={job.timeAgo}
+            />
+          ))}
+          <div className="flex justify-center mt-6 space-x-2">
+            <button
+              className={`px-4 py-2 rounded-md ${
+                currentPage <= 1
+                  ? "bg-gray-200 text-gray-700 cursor-not-allowed"
+                  : "bg-blue-500 text-white cursor-pointer"
+              }`}
+              disabled={currentPage === 1}
+              onClick={() => setCurrentPage((prev) => prev - 1)}
+            >
+              Prev
+            </button>
+            {Array.from({ length: totalPages }, (_, i) => (
+              <button
+                key={i}
+                onClick={() => setCurrentPage(i + 1)}
+                className={`px-4 py-2 rounded-md cursor-pointer ${
+                  currentPage === i + 1
+                    ? "bg-blue-500 text-white"
+                    : "bg-gray-200 text-gray-700"
+                }`}
+              >
+                {i + 1}
+              </button>
             ))}
-            <div className="flex justify-center mt-6 space-x-2">
-              <button
-                className={`px-4 py-2 rounded-md ${
-                  currentPage <= 1
-                    ? "bg-gray-200 text-gray-700 cursor-not-allowed"
-                    : "bg-blue-500 text-white cursor-pointer"
-                }`}
-                disabled={currentPage === 1}
-                onClick={() => setCurrentPage((prev) => prev - 1)}
-              >
-                Prev
-              </button>
-              {Array.from({ length: totalPages }, (_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setCurrentPage(i + 1)}
-                  className={`px-4 py-2 rounded-md cursor-pointer ${
-                    currentPage === i + 1
-                      ? "bg-blue-500 text-white"
-                      : "bg-gray-200 text-gray-700"
-                  }`}
-                >
-                  {i + 1}
-                </button>
-              ))}
-              <button
-                className={`px-4 py-2 rounded-md ${
-                  currentPage === totalPages
-                    ? "bg-gray-200 text-gray-700 cursor-not-allowed"
-                    : "bg-blue-500 text-white cursor-pointer"
-                }`}
-                disabled={currentPage === totalPages}
-                onClick={() => setCurrentPage((prev) => prev + 1)}
-              >
-                Next
-              </button>
-            </div>
+            <button
+              className={`px-4 py-2 rounded-md ${
+                currentPage === totalPages
+                  ? "bg-gray-200 text-gray-700 cursor-not-allowed"
+                  : "bg-blue-500 text-white cursor-pointer"
+              }`}
+              disabled={currentPage === totalPages}
+              onClick={() => setCurrentPage((prev) => prev + 1)}
+            >
+              Next
+            </button>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
