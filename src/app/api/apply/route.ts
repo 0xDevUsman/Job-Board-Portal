@@ -70,16 +70,15 @@ export const DELETE = async (
   await dbConnect();
 
   try {
-    const { id: jobId } = await params;
-    const { userId } = await req.json();
+    const { id: appId } = await params;
 
-    if (!jobId || !userId) {
+    if (!appId) {
       return new Response("Job ID and User ID are required", { status: 400 });
     }
     const deleteApplication = await Application.findOneAndDelete({
-      jobId: jobId,
-      userId: userId,
+      _id: appId,
     });
+
     if (!deleteApplication) {
       return new Response("Application not found", { status: 404 });
     }

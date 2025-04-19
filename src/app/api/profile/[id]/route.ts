@@ -18,7 +18,7 @@ export const GET = async (
     }
 
     const user = await User.findById(id).select("-password");
-    console.log("User found:", user);
+
     if (!user) {
       return new Response("User not found", { status: 404 });
     }
@@ -35,6 +35,7 @@ export const GET = async (
           name: user.firstname + " " + user.lastname,
           email: user.email,
           applications: applications.map((app) => ({
+            applicationID: app._id,
             title: app.jobId?.title || "Unknown",
             company: app.jobId?.company || "Unknown",
             dateApplied: app.createdAt.toLocaleDateString(),

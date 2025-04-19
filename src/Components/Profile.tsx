@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { FaUser } from "react-icons/fa";
 import { useSession } from "next-auth/react";
 import { MdDelete } from "react-icons/md";
+import { toast } from "react-toastify";
 
 const Profile: React.FC = () => {
   const { data: session } = useSession();
@@ -11,12 +12,16 @@ const Profile: React.FC = () => {
   const [user, setUser] = useState<{
     name?: string;
     email?: string;
-    applications?: { title: string; company: string; dateApplied: string }[];
+    applications?: {
+      applicationID: string;
+      title: string;
+      company: string;
+      dateApplied: string;
+    }[];
   } | null>(null);
   useEffect(() => {
     const fetchUserProfile = async () => {
       const response = await axios.get(`/api/profile/${id}`);
-      console.log(response.data);
       const user = response.data.user;
       setUser(user);
     };
@@ -24,6 +29,24 @@ const Profile: React.FC = () => {
       fetchUserProfile();
     }
   }, [id]);
+
+  const handleDelete = async (appId: string) => {
+    try {
+      const response = await axios.delete(`/api/apply/${appId}`);
+      if (response.status === 200) {
+        toast.success("Application deleted successfully");
+        setUser((prevUser) => ({
+          ...prevUser,
+          applications: prevUser?.applications?.filter(
+            (app) => app.applicationID !== appId
+          ),
+        }));
+      }
+    } catch (error) {
+      console.error("Error deleting application:", error);
+      toast.error("Failed to delete application");
+    }
+  };
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-12 px-6">
       <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden">
@@ -61,19 +84,23 @@ const Profile: React.FC = () => {
               {user?.applications?.map((app, index) => (
                 <div
                   key={index}
-                  className="flex justify-between items-center bg-gray-50 p-3 rounded-lg shadow-sm hover:shadow-md transition"
+                  className="flex  justify-between items-center bg-gray-50 p-3 rounded-lg shadow-sm hover:shadow-md transition"
                 >
                   <div>
                     <h3 className="text-base font-medium text-gray-800">
                       {app.title}
                     </h3>
+
                     <p className="text-sm text-gray-500">{app.company}</p>
                     <p className="text-xs text-gray-400 mt-1">
                       Applied on {app.dateApplied}
                     </p>
                   </div>
                   <div className="text-red-500 cursor-pointer">
-                    <MdDelete className="w-6 h-6" />
+                    <MdDelete
+                      onClick={() => handleDelete(app.applicationID)}
+                      className="w-6 h-6"
+                    />
                   </div>
                 </div>
               ))}
