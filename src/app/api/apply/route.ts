@@ -1,11 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-// import multer from "multer";
 import cloudinary from "@/lib/cloudinary";
 import { dbConnect } from "@/lib/db";
-import apply from "@/models/application";
 import mongoose from "mongoose";
+import Application from "@/models/application";
 
-// Helper to convert FormData File to Buffer
 async function fileToBuffer(file: File): Promise<Buffer> {
   const arrayBuffer = await file.arrayBuffer();
   return Buffer.from(arrayBuffer);
@@ -19,7 +17,8 @@ export const config = {
 
 export async function POST(req: NextRequest) {
   try {
-    // Parse form data
+    await dbConnect();
+
     const formData = await req.formData();
     const file = formData.get("resume") as File;
     const jobId = new mongoose.Types.ObjectId(formData.get("jobId") as string);
@@ -45,10 +44,9 @@ export async function POST(req: NextRequest) {
       }
     );
 
-    await dbConnect();
     const resumeUrl = uploadRes.secure_url;
 
-    const newApplication = new apply({
+    const newApplication = new Application({
       resume: resumeUrl,
       jobId,
       userId,
@@ -64,3 +62,41 @@ export async function POST(req: NextRequest) {
     );
   }
 }
+
+export const DELETE = async (
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) => {
+  await dbConnect();
+
+  try {
+    const { id: jobId } = await params;
+    const { userId } = await req.json();
+
+    if (!jobId || !userId) {
+      return new Response("Job ID and User ID are required", { status: 400 });
+    }
+    const deleteApplication = await Application.findOneAndDelete({
+      jobId: jobId,
+      userId: userId,
+    });
+    if (!deleteApplication) {
+      return new Response("Application not found", { status: 404 });
+    }
+    return new Response(
+      JSON.stringify({
+        message: "Application deleted successfully",
+      }),
+      {
+        status: 200,
+        headers: { "Content-Type": "Application/json" },
+      }
+    );
+  } catch (error) {
+    console.error("Error in DELETE /api/profile/[id]:", error);
+    return new Response(JSON.stringify({ error: (error as Error).message }), {
+      status: 500,
+      headers: { "Content-Type": "Application/json" },
+    });
+  }
+};
