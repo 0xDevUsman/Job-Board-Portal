@@ -70,7 +70,7 @@ export const DELETE = async (
   await dbConnect();
 
   try {
-    const { id: appId } = await params;
+    const { id: appId } = params;
 
     if (!appId) {
       return new Response("Job ID and User ID are required", { status: 400 });
