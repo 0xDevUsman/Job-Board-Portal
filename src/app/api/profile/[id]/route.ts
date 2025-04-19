@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { dbConnect } from "@/lib/db";
-import Application from "@/models/application"; // Use consistent casing
+import Application from "@/models/application";
 import User from "@/models/user";
 import Job from "@/models/jobs";
 
@@ -55,4 +55,40 @@ export const GET = async (
   }
 };
 
-export const DELETE = async () => {};
+export const DELETE = async (
+  req: Request,
+  { params }: { params: Promise<{ id: string }> }
+) => {
+  await dbConnect();
+
+  try {
+    const { id: jobId } = await params;
+    const { userId } = await req.json();
+
+    if (!jobId || !userId) {
+      return new Response("Job ID and User ID are required", { status: 400 });
+    }
+    const deleteApplication = await Application.findOneAndDelete({
+      jobId: jobId,
+      userId: userId,
+    });
+    if (!deleteApplication) {
+      return new Response("Application not found", { status: 404 });
+    }
+    return new Response(
+      JSON.stringify({
+        message: "Application deleted successfully",
+      }),
+      {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+  } catch (error) {
+    console.error("Error in DELETE /api/profile/[id]:", error);
+    return new Response(JSON.stringify({ error: (error as Error).message }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+};
