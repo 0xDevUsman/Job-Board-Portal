@@ -1,6 +1,6 @@
 "use client";
 
-import { signIn } from "next-auth/react";
+import { getSession, signIn } from "next-auth/react";
 import Image from "next/image";
 import logo from "@/assets/logo.svg";
 import google from "@/assets/google.svg";
@@ -25,11 +25,21 @@ export default function Login() {
         email,
         password,
       });
+
       if (result?.error) {
         toast.error(result.error);
       } else {
         toast.success("Login successful!");
-        setTimeout(() => router.push("/"), 2000);
+
+        const session = await getSession();
+
+        setTimeout(() => {
+          if (session?.user?.role === "recruiter") {
+            router.push("/recruiter/dashboard");
+          } else {
+            router.push("/");
+          }
+        }, 1500);
       }
     } catch (error) {
       console.error("Login failed:", error);
