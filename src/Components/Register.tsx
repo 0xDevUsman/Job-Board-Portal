@@ -13,22 +13,34 @@ import { toast } from "react-toastify";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function Register() {
+type RegisterProps = {
+  showOAuth?: boolean; // Show Google/GitHub buttons
+  showRoleInput?: boolean; // Show role dropdown/input
+  defaultRole: "employee" | "recruiter"; // fallback role if no input
+};
+
+export default function Register({
+  showOAuth = true,
+  showRoleInput = false,
+  defaultRole,
+}: RegisterProps) {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState(defaultRole);
   const router = useRouter();
+
   const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const { data } = await axios.post("/api/auth/register", {
         firstname: firstName,
         lastname: lastName,
-        email: email,
-        password: password,
+        email,
+        password,
+        role,
       });
-      console.log(data);
       if (data) {
         toast.success("Registration successful. Please login.");
         setTimeout(() => {
@@ -40,7 +52,6 @@ export default function Register() {
         ? error.response?.data?.message ||
           "Registration failed. Please try again."
         : "An unexpected error occurred. Please try again.";
-
       console.error("Registration failed:", errorMessage);
       alert(errorMessage);
     }
@@ -67,32 +78,36 @@ export default function Register() {
   return (
     <div className="relative flex flex-col items-center justify-center min-h-screen bg-[#F5FAFF] px-4">
       <div className="absolute hidden md:block md:opacity-70 lg:opacity-100 top-0 right-0">
-        <Image className="" src={topRight} alt="" />
+        <Image src={topRight} alt="" />
       </div>
       <div className="flex justify-center items-center gap-3 mb-6">
         <Image src={logo} alt="CareerFlow Logo" width={40} height={40} />
         <h1 className="font-bold text-2xl text-gray-900">CareerFlow</h1>
       </div>
       <div className="bg-white shadow-xl rounded-lg p-8 w-full max-w-sm text-center">
-        <button
-          onClick={() => googleSignIn()}
-          className="w-full flex items-center justify-center gap-3 bg-white border border-gray-300 shadow-sm text-gray-700 font-medium px-4 py-3 rounded-md transition focus:ring-1 focus:ring-blue-500 hover:cursor-pointer hover:border-blue-500 duration-150"
-        >
-          <Image src={google} alt="Google Logo" width={20} height={20} />
-          Sign in with Google
-        </button>
-        <button
-          onClick={() => githubSignIn()}
-          className="w-full flex items-center justify-center gap-3 bg-white border border-gray-300 shadow-sm text-gray-700 font-medium px-4 py-3 rounded-md transition focus:ring-1 focus:ring-blue-500 hover:cursor-pointer hover:border-blue-500 duration-150 mt-4"
-        >
-          <Image src={github} alt="Google Logo" width={20} height={20} />
-          Sign in with Github
-        </button>
-        <div className="flex items-center justify-center gap-3 mt-6">
-          <div className="h-[1px] w-full bg-gray-500"></div>
-          <h1 className="text-sm text-gray-500">OR</h1>
-          <div className="h-[1px] w-full bg-gray-500"></div>
-        </div>
+        {showOAuth && (
+          <>
+            <button
+              onClick={googleSignIn}
+              className="w-full flex items-center justify-center gap-3 bg-white border border-gray-300 shadow-sm text-gray-700 font-medium px-4 py-3 rounded-md transition focus:ring-1 focus:ring-blue-500 hover:border-blue-500 duration-150"
+            >
+              <Image src={google} alt="Google Logo" width={20} height={20} />
+              Sign in with Google
+            </button>
+            <button
+              onClick={githubSignIn}
+              className="w-full flex items-center justify-center gap-3 bg-white border border-gray-300 shadow-sm text-gray-700 font-medium px-4 py-3 rounded-md transition focus:ring-1 focus:ring-blue-500 hover:border-blue-500 duration-150 mt-4"
+            >
+              <Image src={github} alt="Github Logo" width={20} height={20} />
+              Sign in with Github
+            </button>
+            <div className="flex items-center justify-center gap-3 mt-6">
+              <div className="h-[1px] w-full bg-gray-500"></div>
+              <h1 className="text-sm text-gray-500">OR</h1>
+              <div className="h-[1px] w-full bg-gray-500"></div>
+            </div>
+          </>
+        )}
         <form onSubmit={submitHandler} className="flex flex-col gap-1 mt-3">
           <label
             htmlFor="first-name"
@@ -103,11 +118,12 @@ export default function Register() {
           <input
             type="text"
             id="first-name"
-            placeholder="john"
+            placeholder="John"
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
             className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition"
           />
+
           <label
             htmlFor="last-name"
             className="text-gray-700 font-medium text-start mt-3"
@@ -122,6 +138,7 @@ export default function Register() {
             onChange={(e) => setLastName(e.target.value)}
             className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition"
           />
+
           <label
             htmlFor="email"
             className="text-gray-700 font-medium text-start mt-3"
@@ -136,6 +153,7 @@ export default function Register() {
             onChange={(e) => setEmail(e.target.value)}
             className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition"
           />
+
           <label
             htmlFor="password"
             className="text-gray-700 font-medium text-start mt-3"
@@ -150,22 +168,45 @@ export default function Register() {
             onChange={(e) => setPassword(e.target.value)}
             className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition"
           />
+
+          {showRoleInput && (
+            <>
+              <label
+                htmlFor="role"
+                className="text-gray-700 font-medium text-start mt-3"
+              >
+                <span className="text-red-500">*</span> Role
+              </label>
+              <select
+                value={role}
+                onChange={(e) =>
+                  setRole(e.target.value as "employee" | "recruiter")
+                }
+                className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 text-sm"
+              >
+                <option value="employee">Employee</option>
+                <option value="recruiter">Recruiter</option>
+              </select>
+            </>
+          )}
+
           <h1 className="text-sm text-gray-500 mt-3 text-start">
-            <Link href="/login" className="">
+            <Link href="/login">
               Already have an account?{" "}
               <span className="text-blue-500 hover:underline">Login</span>
             </Link>
           </h1>
+
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white font-medium py-3 rounded-md shadow-sm transition focus:ring-1 focus:ring-blue-500 hover:cursor-pointer hover:bg-blue-500 duration-150 mt-6"
+            className="w-full bg-blue-500 text-white font-medium py-3 rounded-md shadow-sm transition focus:ring-1 focus:ring-blue-500 hover:bg-blue-600 duration-150 mt-6"
           >
-            Login
+            Register
           </button>
         </form>
       </div>
-      <div className="absolute hidden md:block md:opacity-70 lg:opacity-100 lg-opacity-85 bottom-0 left-0">
-        <Image className="" src={bottomLeft} alt="" />
+      <div className="absolute hidden md:block md:opacity-70 lg:opacity-100 bottom-0 left-0">
+        <Image src={bottomLeft} alt="" />
       </div>
     </div>
   );

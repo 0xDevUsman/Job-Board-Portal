@@ -3,9 +3,7 @@ import React from "react";
 
 const page = () => {
   return (
-    <>
-      <Register showOAuth={true} showRoleInput={false} defaultRole="employee" />
-    </>
+    <Register showOAuth={false} showRoleInput={true} defaultRole="recruiter" />
   );
 };
 
