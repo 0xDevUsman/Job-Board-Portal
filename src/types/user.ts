@@ -17,3 +17,11 @@ export const loginSchema = zod.object({
 });
 
 export type loginSchema = zod.infer<typeof loginSchema>;
+
+export const recruiterSchema = zod.object({
+  firstname: zod.string(),
+  lastname: zod.string(),
+  email: zod.string().email(),
+  password: zod.string().min(6),
+  role: zod.enum(["employee", "recruiter"]),
+});

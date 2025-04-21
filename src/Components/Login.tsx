@@ -25,7 +25,6 @@ export default function Login() {
         email,
         password,
       });
-
       if (result?.error) {
         toast.error(result.error);
       } else {

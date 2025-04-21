@@ -26,6 +26,11 @@ const UserSchema: Schema = new Schema(
       enum: ["credentials", "google", "github"],
       default: "credentials",
     },
+    role: {
+      type: [String],
+      enum: ["employee", "recruiter"],
+      default: ["employee"],
+    },
   },
   { timestamps: true }
 );
