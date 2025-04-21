@@ -30,7 +30,7 @@ const FilterComponent = ({
 
   useEffect(() => {
     onFilterChange({ profile, location, remote, salary, sortBy });
-  }, [profile, location, remote, salary, sortBy]);
+  }, [profile, location, remote, salary, sortBy, onFilterChange]);
 
   return (
     <div className="max-w-md p-6 bg-white shadow-md rounded-lg">
