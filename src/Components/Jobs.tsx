@@ -1,7 +1,24 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+
+const useDebounce = <T,>(value: T, delay: number) => {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
+};
 
 const FilterComponent = ({
   onFilterChange,
@@ -20,6 +37,13 @@ const FilterComponent = ({
   const [salary, setSalary] = useState(0);
   const [sortBy, setSortBy] = useState("relevance");
 
+  // Debounce the filter values
+  const debouncedProfile = useDebounce(profile, 500);
+  const debouncedLocation = useDebounce(location, 500);
+  const debouncedRemote = useDebounce(remote, 500);
+  const debouncedSalary = useDebounce(salary, 500);
+  const debouncedSortBy = useDebounce(sortBy, 500);
+
   const handleClearAll = () => {
     setProfile("");
     setLocation("");
@@ -28,9 +52,25 @@ const FilterComponent = ({
     setSortBy("relevance");
   };
 
+  // Only call onFilterChange when debounced values change
   useEffect(() => {
-    onFilterChange({ profile, location, remote, salary, sortBy });
-  }, [profile, location, remote, salary, sortBy, onFilterChange]);
+    const newFilters = {
+      profile: debouncedProfile,
+      location: debouncedLocation,
+      remote: debouncedRemote,
+      salary: debouncedSalary,
+      sortBy: debouncedSortBy,
+    };
+    console.log("FilterComponent: Applying filters:", newFilters);
+    onFilterChange(newFilters);
+  }, [
+    debouncedProfile,
+    debouncedLocation,
+    debouncedRemote,
+    debouncedSalary,
+    debouncedSortBy,
+    onFilterChange,
+  ]);
 
   return (
     <div className="max-w-md p-6 bg-white shadow-md rounded-lg">
@@ -152,24 +192,8 @@ interface JobListingProps {
   timeAgo: string;
 }
 
-const onClickJob = async (_id: string) => {
-  const res = await axios.get(`/api/job/${_id}`);
-  const job = res.data.job;
-  console.log(job);
-  window.location.href = `/jobs/${_id}`;
-};
-
-const JobListing = ({
-  _id,
-  title,
-  company,
-  location,
-  salary,
-}: JobListingProps) => (
-  <div
-    onClick={() => onClickJob(_id)}
-    className="rounded-lg p-4 mb-4 shadow-md bg-white cursor-pointer hover:shadow-lg transition duration-200 hover:scale-100"
-  >
+const JobListing = ({ title, company, location, salary }: JobListingProps) => (
+  <div className="rounded-lg p-4 mb-4 shadow-md bg-white cursor-pointer hover:shadow-lg transition duration-200 hover:scale-100">
     <div className="flex justify-between items-start">
       <div>
         <h3 className="text-lg font-semibold">{title}</h3>
@@ -201,6 +225,13 @@ const Jobs = () => {
   const [jobListings, setJobListing] = useState<JobListingProps[]>([]);
   const [filteredJobs, setFilteredJobs] = useState<JobListingProps[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [lastFilters, setLastFilters] = useState<{
+    profile: string;
+    location: string;
+    remote: boolean;
+    salary: number;
+    sortBy: string;
+  } | null>(null); // Track last applied filters
   const jobsPerPage = 5;
 
   const indexOfLastJob = currentPage * jobsPerPage;
@@ -208,71 +239,115 @@ const Jobs = () => {
   const currentJobs = filteredJobs.slice(indexOfFirstJob, indexOfLastJob);
   const totalPages = Math.ceil(filteredJobs.length / jobsPerPage);
 
+  // Fetch jobs from the API
   const getJob = async () => {
-    const res = await axios.get("/api/job");
-    setJobListing(res.data.jobs);
-    setFilteredJobs(res.data.jobs);
+    try {
+      const res = await axios.get("/api/job");
+      setJobListing(res.data.jobs);
+      setFilteredJobs(res.data.jobs);
+    } catch (error) {
+      console.error("Error fetching jobs:", error);
+    }
   };
 
+  // Run once when component mounts
   useEffect(() => {
     getJob();
   }, []);
 
-  const handleFilterChange = (filters: {
-    profile: string;
-    location: string;
-    remote: boolean;
-    salary: number;
-    sortBy: string;
-  }) => {
-    let filtered = [...jobListings];
+  // Handle filter changes
+  const handleFilterChange = useCallback(
+    (filters: {
+      profile: string;
+      location: string;
+      remote: boolean;
+      salary: number;
+      sortBy: string;
+    }) => {
+      // Check if filters have changed
+      if (
+        lastFilters &&
+        lastFilters.profile === filters.profile &&
+        lastFilters.location === filters.location &&
+        lastFilters.remote === filters.remote &&
+        lastFilters.salary === filters.salary &&
+        lastFilters.sortBy === filters.sortBy
+      ) {
+        console.log("No filter changes, skipping update");
+        return; // Skip if filters haven't changed
+      }
 
-    if (filters.profile) {
-      filtered = filtered.filter((job) =>
-        job.title.toLowerCase().includes(filters.profile.toLowerCase())
-      );
-    }
+      console.log("Applying filters:", filters);
+      setLastFilters(filters); // Update last applied filters
 
-    if (filters.location) {
-      filtered = filtered.filter((job) =>
-        job.location.toLowerCase().includes(filters.location.toLowerCase())
-      );
-    }
+      let filtered = [...jobListings];
 
-    if (filters.remote) {
-      filtered = filtered.filter((job) =>
-        job.location.toLowerCase().includes("remote")
-      );
-    }
+      // Apply filters
+      if (filters.profile) {
+        filtered = filtered.filter((job) =>
+          job.title.toLowerCase().includes(filters.profile.toLowerCase())
+        );
+      }
 
-    if (filters.salary > 0) {
-      filtered = filtered.filter((job) => {
-        const jobSalary =
-          typeof job.salary === "string"
-            ? Number(String(job.salary).replace(/[^\d]/g, ""))
-            : typeof job.salary === "number"
-            ? job.salary
-            : 0;
-        return jobSalary >= filters.salary * 1000;
-      });
-    }
+      if (filters.location) {
+        filtered = filtered.filter((job) =>
+          job.location.toLowerCase().includes(filters.location.toLowerCase())
+        );
+      }
 
-    if (filters.sortBy === "salary") {
-      filtered.sort((a, b) => {
-        const salaryA =
-          typeof a.salary === "string"
-            ? Number(String(a.salary).replace(/[^\d]/g, ""))
-            : a.salary;
-        const salaryB =
-          typeof b.salary === "string"
-            ? Number(String(b.salary).replace(/[^\d]/g, ""))
-            : b.salary;
-        return salaryB - salaryA;
-      });
-    }
+      if (filters.remote) {
+        filtered = filtered.filter((job) =>
+          job.location.toLowerCase().includes("remote")
+        );
+      }
 
-    setCurrentPage(1);
-    setFilteredJobs(filtered);
+      if (filters.salary > 0) {
+        filtered = filtered.filter((job) => {
+          const jobSalary =
+            typeof job.salary === "string"
+              ? Number(String(job.salary).replace(/[^\d]/g, ""))
+              : typeof job.salary === "number"
+              ? job.salary
+              : 0;
+          return jobSalary >= filters.salary * 1000;
+        });
+      }
+
+      if (filters.sortBy === "salary") {
+        filtered.sort((a, b) => {
+          const salaryA =
+            typeof a.salary === "string"
+              ? Number(String(a.salary).replace(/[^\d]/g, ""))
+              : a.salary;
+          const salaryB =
+            typeof b.salary === "string"
+              ? Number(String(b.salary).replace(/[^\d]/g, ""))
+              : b.salary;
+          return salaryB - salaryA;
+        });
+      } else if (filters.sortBy === "date") {
+        // Add date sorting logic if applicable (e.g., based on timeAgo or a date field)
+        filtered.sort((a, b) => {
+          // Placeholder: Replace with actual date comparison
+          return new Date(b.timeAgo).getTime() - new Date(a.timeAgo).getTime();
+        });
+      }
+
+      setFilteredJobs(filtered);
+
+      // Reset to page 1 only if filters changed
+      if (currentPage !== 1) {
+        console.log("Resetting to page 1 due to filter change");
+        setCurrentPage(1);
+      }
+    },
+    [jobListings, lastFilters] // Removed currentPage from dependencies
+  );
+
+  // Debug page changes
+  const handlePageChange = (page: number) => {
+    console.log("Changing to page:", page);
+    setCurrentPage(page);
   };
 
   return (
@@ -282,10 +357,10 @@ const Jobs = () => {
           <FilterComponent onFilterChange={handleFilterChange} />
         </div>
         <div className="w-2/3 p-4">
-          {currentJobs.map((job, index) => (
+          {currentJobs.map((job) => (
             <JobListing
+              key={job._id} // Use _id for stable keys
               _id={job._id}
-              key={index}
               title={job.title}
               company={job.company}
               location={job.location}
@@ -302,14 +377,14 @@ const Jobs = () => {
                   : "bg-blue-500 text-white cursor-pointer"
               }`}
               disabled={currentPage === 1}
-              onClick={() => setCurrentPage((prev) => prev - 1)}
+              onClick={() => handlePageChange(currentPage - 1)}
             >
               Prev
             </button>
             {Array.from({ length: totalPages }, (_, i) => (
               <button
                 key={i}
-                onClick={() => setCurrentPage(i + 1)}
+                onClick={() => handlePageChange(i + 1)}
                 className={`px-4 py-2 rounded-md cursor-pointer ${
                   currentPage === i + 1
                     ? "bg-blue-500 text-white"
@@ -326,7 +401,7 @@ const Jobs = () => {
                   : "bg-blue-500 text-white cursor-pointer"
               }`}
               disabled={currentPage === totalPages}
-              onClick={() => setCurrentPage((prev) => prev + 1)}
+              onClick={() => handlePageChange(currentPage + 1)}
             >
               Next
             </button>

@@ -1,8 +1,37 @@
 import { dbConnect } from "@/lib/db";
 import Job from "@/models/jobs";
+import { NextRequest, NextResponse } from "next/server";
 import { jobSchema } from "@/types/job";
 import mongoose from "mongoose";
-import { NextRequest, NextResponse } from "next/server";
+
+export const GET = async (req: NextRequest) => {
+  try {
+    await dbConnect();
+
+    const body = await req.json();
+    const { userId } = body; // Receive userId from frontend
+
+    if (!userId) {
+      return NextResponse.json({ message: "Missing userId" }, { status: 400 });
+    }
+
+    const jobs = await Job.find({ postedBy: userId }).populate(
+      "postedBy",
+      "firstname email"
+    );
+
+    return NextResponse.json({ jobs }, { status: 200 });
+  } catch (error) {
+    return NextResponse.json(
+      {
+        status: "error",
+        message: "An error occurred while fetching jobs",
+        error: (error as Error).message,
+      },
+      { status: 500 }
+    );
+  }
+};
 
 export const POST = async (req: NextRequest) => {
   try {
@@ -25,7 +54,7 @@ export const POST = async (req: NextRequest) => {
       jobType,
       postedBy,
     } = parseBody.data;
-    const job = new Job({
+    const job = await new Job({
       title,
       company,
       location,
@@ -43,47 +72,5 @@ export const POST = async (req: NextRequest) => {
       message: "An error occurred while creating job",
       error: (error as Error).message,
     });
-  }
-};
-
-export const DELETE = async (req: NextRequest) => {
-  try {
-    await dbConnect();
-    const { jobId, userId } = await req.json();
-
-    if (!jobId || !userId) {
-      return NextResponse.json(
-        { message: "Missing jobId or userId" },
-        { status: 400 }
-      );
-    }
-
-    // Find the job and check ownership
-    const job = await Job.findById(jobId);
-    if (!job) {
-      return NextResponse.json({ message: "Job not found" }, { status: 404 });
-    }
-
-    if (job.postedBy.toString() !== userId) {
-      return NextResponse.json(
-        { message: "Unauthorized: You can only delete your own job" },
-        { status: 403 }
-      );
-    }
-
-    await Job.findByIdAndDelete(jobId);
-    return NextResponse.json(
-      { message: "Job deleted successfully" },
-      { status: 200 }
-    );
-  } catch (error) {
-    return NextResponse.json(
-      {
-        status: "error",
-        message: "An error occurred while deleting the job",
-        error: (error as Error).message,
-      },
-      { status: 500 }
-    );
   }
 };
