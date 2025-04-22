@@ -34,6 +34,7 @@ export const GET = async (
         user: {
           name: user.firstname + " " + user.lastname,
           email: user.email,
+          role: user.role,
           applications: applications.map((app) => ({
             applicationID: app._id,
             title: app.jobId?.title || "Unknown",

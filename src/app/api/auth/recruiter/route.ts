@@ -2,14 +2,14 @@ import { dbConnect } from "@/lib/db";
 import { NextResponse } from "next/server";
 import User from "@/models/user";
 import bcrypt from "bcryptjs";
-import { recruiterSchema } from "@/types/user";
+import { registerSchema } from "@/types/user";
 import { NextRequest } from "next/server";
 
 export const POST = async (req: NextRequest) => {
   await dbConnect();
   try {
     const body = await req.json();
-    const parseBody = recruiterSchema.safeParse(body);
+    const parseBody = registerSchema.safeParse(body);
     if (!parseBody.success) {
       return NextResponse.json(
         { errors: parseBody.error.errors },

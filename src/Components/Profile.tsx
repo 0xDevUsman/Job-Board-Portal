@@ -12,6 +12,7 @@ const Profile: React.FC = () => {
   const [user, setUser] = useState<{
     name?: string;
     email?: string;
+    role?: string;
     applications?: {
       applicationID: string;
       title: string;
@@ -63,6 +64,9 @@ const Profile: React.FC = () => {
               </h1>
               <p className="text-sm text-gray-500">
                 {user?.email || "No email available"}
+              </p>
+              <p className="text-sm text-gray-500">
+                role : {user?.role || "No email available"}
               </p>
             </div>
           </div>

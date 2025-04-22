@@ -85,7 +85,7 @@ export default function Register({
         <h1 className="font-bold text-2xl text-gray-900">CareerFlow</h1>
       </div>
       <div className="bg-white shadow-xl rounded-lg p-8 w-full max-w-sm text-center">
-        {showOAuth && (
+        {showOAuth ? (
           <>
             <button
               onClick={googleSignIn}
@@ -106,6 +106,12 @@ export default function Register({
               <h1 className="text-sm text-gray-500">OR</h1>
               <div className="h-[1px] w-full bg-gray-500"></div>
             </div>
+          </>
+        ) : (
+          <>
+            <h1 className="text-2xl font-bold text-blue-500 tracking-tight mb-4">
+              Register Recruiters !
+            </h1>
           </>
         )}
         <form onSubmit={submitHandler} className="flex flex-col gap-1 mt-3">
