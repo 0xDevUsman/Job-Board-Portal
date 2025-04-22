@@ -341,7 +341,7 @@ const Jobs = () => {
         setCurrentPage(1);
       }
     },
-    [jobListings, lastFilters] // Removed currentPage from dependencies
+    [jobListings, lastFilters, currentPage]
   );
 
   // Debug page changes
