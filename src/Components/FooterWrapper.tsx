@@ -3,9 +3,14 @@
 import { usePathname } from "next/navigation";
 import Footer from "./Footer";
 
-export default function FooterWrapper() {
+export default function NavbarWrapper() {
   const pathname = usePathname();
-  const hideFooterRoutes = ["/login", "/register"];
 
-  return hideFooterRoutes.includes(pathname) ? null : <Footer />;
+  // Hide Navbar on these routes or anything under /recruiter
+  const shouldHide =
+    pathname === "/login" ||
+    pathname === "/register" ||
+    pathname.startsWith("/recruiter");
+
+  return shouldHide ? null : <Footer />;
 }

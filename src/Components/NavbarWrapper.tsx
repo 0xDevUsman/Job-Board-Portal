@@ -5,9 +5,12 @@ import Navbar from "@/Components/Navbar";
 
 export default function NavbarWrapper() {
   const pathname = usePathname();
-  const hideNavbarRoutes = ["/login", "/register", "/recruiter/register"];
-  const shouldHide = hideNavbarRoutes.some((route) =>
-    pathname.startsWith(route)
-  );
+
+  // Hide Navbar on these routes or anything under /recruiter
+  const shouldHide =
+    pathname === "/login" ||
+    pathname === "/register" ||
+    pathname.startsWith("/recruiter");
+
   return shouldHide ? null : <Navbar />;
 }
