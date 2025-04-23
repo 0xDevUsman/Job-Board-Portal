@@ -9,6 +9,7 @@ import { useSession, signOut } from "next-auth/react";
 const Navbar: React.FC = () => {
   const { status, data: session } = useSession();
   const userId = session?.user?.id;
+  const role = session?.user?.role;
   const isLoggedIn = status === "authenticated";
 
   return (
@@ -34,6 +35,16 @@ const Navbar: React.FC = () => {
               >
                 Contact
               </Link>
+              {role === "recruiter" ? (
+                <Link
+                  className="text-gray-600 hover:text-blue-600"
+                  href="/recruiter/dashboard"
+                >
+                  Dashboard
+                </Link>
+              ) : (
+                ""
+              )}
             </div>
             <div className="flex justify-center items-center gap-4">
               <Link href="/">
