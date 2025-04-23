@@ -349,6 +349,14 @@ const Jobs = () => {
     setCurrentPage(page);
   };
 
+  const onClickJob = async (_id: string) => {
+    const res = await axios.get(`/api/job/${_id}`);
+    const job = res.data.job;
+    console.log(job);
+    // Navigate to job detail page
+    window.location.href = `/jobs/${_id}`;
+  };
+
   return (
     <div className="max-w-7xl mx-auto p-6">
       <div className="w-full flex justify-center items-start mt-10">
@@ -357,16 +365,22 @@ const Jobs = () => {
         </div>
         <div className="w-2/3 p-4">
           {currentJobs.map((job) => (
-            <JobListing
-              key={job._id} // Use _id for stable keys
-              _id={job._id}
-              title={job.title}
-              company={job.company}
-              location={job.location}
-              experience={job.experience}
-              salary={job.salary}
-              timeAgo={job.timeAgo}
-            />
+            <div
+              key={job._id}
+              className="mb-4"
+              onClick={() => onClickJob(job._id)}
+            >
+              <JobListing
+                key={job._id}
+                _id={job._id}
+                title={job.title}
+                company={job.company}
+                location={job.location}
+                experience={job.experience}
+                salary={job.salary}
+                timeAgo={job.timeAgo}
+              />
+            </div>
           ))}
           <div className="flex justify-center mt-6 space-x-2">
             <button

@@ -41,6 +41,7 @@ export default function Register({
         password,
         role,
       });
+      console.log(data);
       if (data) {
         toast.success("Registration successful. Please login.");
         setTimeout(() => {

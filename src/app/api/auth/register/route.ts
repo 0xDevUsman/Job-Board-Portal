@@ -25,11 +25,6 @@ export const POST = async (req: NextRequest) => {
       );
     }
     const hashedPassword = await bcrypt.hash(password, 10);
-    if (role !== "recruiter") {
-      return NextResponse.json({
-        message: "register as employee",
-      });
-    }
     const user = await new User({
       firstname: firstname || "",
       lastname: lastname || "",

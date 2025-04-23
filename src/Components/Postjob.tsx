@@ -110,7 +110,7 @@ const Postjob = () => {
       </form>
 
       <p className="text-xs text-gray-400 text-right mt-6">
-        © 2025 Company Name. All rights reserved.
+        © 2025 CareerFlow. All rights reserved.
       </p>
     </div>
   );

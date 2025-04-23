@@ -58,7 +58,7 @@ const JobApplicationPage: React.FC = () => {
       payload.append("userId", formData.userId);
       payload.append("resume", formData.resume);
 
-      const response = await axios.post("/api/apply", payload, {
+      const response = await axios.post("/api/apply/", payload, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

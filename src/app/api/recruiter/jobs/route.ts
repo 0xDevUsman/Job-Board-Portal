@@ -8,8 +8,8 @@ export const GET = async (req: NextRequest) => {
   try {
     await dbConnect();
 
-    const body = await req.json();
-    const { userId } = body; // Receive userId from frontend
+    const { searchParams } = new URL(req.url);
+    const userId = searchParams.get("userId");
 
     if (!userId) {
       return NextResponse.json({ message: "Missing userId" }, { status: 400 });
