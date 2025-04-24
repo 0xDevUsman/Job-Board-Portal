@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import Link from "next/link";
@@ -6,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import RecruiterNavbar from "./RecruiterNavbar";
 import axios from "axios";
 import { useSession } from "next-auth/react";
-
+import { useRouter } from "next/navigation";
 // Define TypeScript interfaces for job data
 interface Job {
   _id: string;
@@ -91,6 +90,9 @@ const RecruiterDashboard: React.FC = () => {
               <h2 className="text-2xl font-bold mb-4 text-gray-800">
                 Posted Jobs
               </h2>
+              {jobs.length === 0 && (
+                <p className="text-gray-500">No jobs posted yet.</p>
+              )}
               {jobs.map((job) => (
                 <JobCard key={job._id} job={job} />
               ))}
@@ -132,6 +134,8 @@ interface JobCardProps {
 }
 
 const JobCard: React.FC<JobCardProps> = ({ job }) => {
+  const router = useRouter();
+
   return (
     <div className="bg-gray-50 rounded-lg shadow-xl p-4 mb-4 w-full">
       <h2 className="text-xl font-bold">{job.title}</h2>{" "}
@@ -149,7 +153,10 @@ const JobCard: React.FC<JobCardProps> = ({ job }) => {
           })}
         </span>{" "}
       </h2>
-      <button className="px-4 py-2 rounded-lg bg-blue-600 cursor-pointer text-white font-semibold mt-4 hover:bg-blue-500 transition-all duration-100">
+      <button
+        onClick={() => router.push(`/recruiter/applicants/${job._id}`)}
+        className="px-4 py-2 rounded-lg bg-blue-600 cursor-pointer text-white font-semibold mt-4 hover:bg-blue-500 transition-all duration-100"
+      >
         View Applications
       </button>
     </div>
@@ -177,24 +184,31 @@ interface ApplicationProps {
 
 const ApplicationCard: React.FC<ApplicationProps> = ({ application }) => {
   return (
-    <div className="bg-gray-50 rounded-lg shadow-xl p-4 mb-4 w-full">
-      <h2 className="text-xl font-bold">{application.jobId.title}</h2>{" "}
-      <h2 className="text-base text-gray-600 mt-1 font-semibold">
-        Applied by{" "}
-        <span className="font-medium text-black">
-          {application.userId.firstname} {application.userId.lastname}
-        </span>{" "}
-      </h2>
-      <h2 className="text-sm text-gray-600 font-semibold">
-        Applied on :{" "}
-        <span className="font-medium text-black">
-          {new Date(application.createdAt).toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          })}
-        </span>{" "}
-      </h2>
+    <div className="bg-gray-50 flex justify-between px-4 rounded-lg shadow-xl p-4 mb-4 w-full">
+      <div>
+        <h2 className="text-xl font-bold">{application.jobId.title}</h2>{" "}
+        <h2 className="text-base text-gray-600 mt-1 font-semibold">
+          Applied by{" "}
+          <span className="font-medium text-black">
+            {application.userId.firstname} {application.userId.lastname}
+          </span>{" "}
+        </h2>
+        <h2 className="text-sm text-gray-600 font-semibold">
+          Applied on :{" "}
+          <span className="font-medium text-black">
+            {new Date(application.createdAt).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
+          </span>{" "}
+        </h2>
+      </div>
+      <div className="flex items-center">
+        <button className="px-4 py-2 rounded-lg bg-blue-600 cursor-pointer text-white font-semibold mt-4 hover:bg-blue-500 transition-all duration-100 ml-4">
+          View Details
+        </button>
+      </div>
     </div>
   );
 };
