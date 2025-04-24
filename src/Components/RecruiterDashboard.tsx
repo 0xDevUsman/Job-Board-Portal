@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import Link from "next/link";
@@ -21,7 +22,8 @@ interface JobResponse {
 
 // RecruiterDashboard Component
 const RecruiterDashboard: React.FC = () => {
-  const [jobs, setJobs] = useState<Job[]>([]); // Specify type for jobs state
+  const [jobs, setJobs] = useState<Job[]>([]);
+  const [application, setApplication] = useState<Application[]>([]);
   const { data: session } = useSession();
   const userId = session?.user?.id;
   console.log("User ID:", userId);
@@ -42,12 +44,38 @@ const RecruiterDashboard: React.FC = () => {
     }
   }, [userId]);
 
-  useEffect(() => {
-    if (userId) {
-      getJob();
+  const getApplications = React.useCallback(async () => {
+    try {
+      const res = await axios.get(
+        "http://localhost:3000/api/recruiter/application",
+        {
+          params: { userId },
+        }
+      );
+      setApplication(res.data.applications);
+      console.log("Applications:", res.data.applications);
+    } catch (error) {
+      console.error("Error fetching applications:", error);
+      setApplication([]); // Prevent crash on error
     }
-  }, [getJob, userId]);
+  }, [userId]);
 
+  useEffect(() => {
+    if (userId && userId.length === 24) {
+      getJob();
+      getApplications();
+    }
+  }, [getJob, userId, getApplications]);
+
+  if (!userId) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <h1 className="text-2xl font-bold">
+          Please log in to view your dashboard.
+        </h1>
+      </div>
+    );
+  }
   return (
     <>
       <RecruiterNavbar />
@@ -58,9 +86,11 @@ const RecruiterDashboard: React.FC = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
           {/* Posted Jobs Section */}
-
           <div className="bg-white rounded-2xl shadow-lg p-6 flex flex-col justify-between h-[600px]">
             <div className="space-y-4 overflow-y-auto scrollbar-thin pr-2">
+              <h2 className="text-2xl font-bold mb-4 text-gray-800">
+                Posted Jobs
+              </h2>
               {jobs.map((job) => (
                 <JobCard key={job._id} job={job} />
               ))}
@@ -74,13 +104,19 @@ const RecruiterDashboard: React.FC = () => {
             </Link>
           </div>
 
-          {/* Recent Applications Section */}
           <div className="bg-white rounded-2xl shadow-lg p-6 h-[600px]">
             <h2 className="text-2xl font-bold mb-4 text-gray-800">
               Recent Applications
             </h2>
-            {/* Add your application list or placeholder here */}
-            <p className="text-gray-500">No applications yet.</p>
+            {application.length > 0 ? (
+              <div className="space-y-4 overflow-y-auto scrollbar-thin pr-2">
+                {application.map((app) => (
+                  <ApplicationCard key={app._id} application={app} />
+                ))}
+              </div>
+            ) : (
+              <p className="text-gray-500">No applications yet.</p>
+            )}
           </div>
         </div>
       </div>
@@ -113,13 +149,52 @@ const JobCard: React.FC<JobCardProps> = ({ job }) => {
           })}
         </span>{" "}
       </h2>
-      <h2 className="text-sm text-gray-600 font-semibold">
-        Applicants :{" "}
-        <span className="font-medium text-black">{job.applicantsCount}</span>{" "}
-      </h2>
       <button className="px-4 py-2 rounded-lg bg-blue-600 cursor-pointer text-white font-semibold mt-4 hover:bg-blue-500 transition-all duration-100">
         View Applications
       </button>
+    </div>
+  );
+};
+
+interface User {
+  _id: string;
+  firstname: string;
+  lastname: string;
+  // Add other fields if needed
+}
+
+interface Application {
+  _id: string;
+  jobId: Job;
+  userId: User;
+  status: string;
+  createdAt: string;
+}
+
+interface ApplicationProps {
+  application: Application;
+}
+
+const ApplicationCard: React.FC<ApplicationProps> = ({ application }) => {
+  return (
+    <div className="bg-gray-50 rounded-lg shadow-xl p-4 mb-4 w-full">
+      <h2 className="text-xl font-bold">{application.jobId.title}</h2>{" "}
+      <h2 className="text-base text-gray-600 mt-1 font-semibold">
+        Applied by{" "}
+        <span className="font-medium text-black">
+          {application.userId.firstname} {application.userId.lastname}
+        </span>{" "}
+      </h2>
+      <h2 className="text-sm text-gray-600 font-semibold">
+        Applied on :{" "}
+        <span className="font-medium text-black">
+          {new Date(application.createdAt).toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })}
+        </span>{" "}
+      </h2>
     </div>
   );
 };

@@ -17,7 +17,7 @@ export const GET = async (req: NextRequest) => {
 
     const jobs = await Job.find({ postedBy: userId }).populate(
       "postedBy",
-      "firstname email"
+      "firstname email" // or any other fields you want to include
     );
 
     return NextResponse.json({ jobs }, { status: 200 });

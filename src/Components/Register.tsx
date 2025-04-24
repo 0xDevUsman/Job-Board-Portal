@@ -206,7 +206,7 @@ export default function Register({
 
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white font-medium py-3 rounded-md shadow-sm transition focus:ring-1 focus:ring-blue-500 hover:bg-blue-600 duration-150 mt-6"
+            className="w-full cursor-pointer bg-blue-500 text-white font-medium py-3 rounded-md shadow-sm transition focus:ring-1 focus:ring-blue-500 hover:bg-blue-600 duration-150 mt-6"
           >
             Register
           </button>
