@@ -1,24 +1,53 @@
-import Application from "@/models/application";
-import { dbConnect } from "@/lib/db";
+import mongoose from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
+import Application from "@/models/application";
+import Job from "@/models/jobs";
+import User from "@/models/user"; // Make sure you have this import
+import { dbConnect } from "@/lib/db";
 
-export const GET = async (req: NextRequest, { params }: { params: { id: string } }) => {
+export const GET = async (
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) => {
   try {
     await dbConnect();
-    const { id } = params;
-    console.log("Job ID:", id);
-    if (!id) {
-      return NextResponse.json({ error: "Job ID is required" }, { status: 400 });
+
+    if (!mongoose.models.Job) {
+      mongoose.model("Job", Job.schema);
+    }
+    if (!mongoose.models.User) {
+      mongoose.model("User", User.schema);
+    }
+    if (!mongoose.models.Application) {
+      mongoose.model("Application", Application.schema);
     }
 
-    const applications = await Application.find({ jobId : id })
-      .populate("userId", "firstname lastname email")
-      .populate("jobId", "title");
+    const { id } = await params;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return NextResponse.json(
+        { error: "Invalid Job ID format" },
+        { status: 400 }
+      );
+    }
+
+    const applications = await Application.find({ jobId: id })
+      .populate({
+        path: "jobId",
+        select: "title company", // Add more fields if needed
+        model: "Job",
+      })
+      .populate({
+        path: "userId",
+        select: "firstname lastname email",
+        model: "User",
+      });
 
     return NextResponse.json({ applications });
   } catch (error) {
-    console.error("Error fetching applications for job:", error);
-    return NextResponse.json({ error: "Server error" }, { status: 500 });
+    console.error("Error fetching applications:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
   }
 };
-

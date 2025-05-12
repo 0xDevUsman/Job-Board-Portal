@@ -34,5 +34,5 @@ const JobSchema = new Schema<IJob>({
   createdAt: { type: Date, default: Date.now },
 });
 
-// Export Model
-export default mongoose.models.Job || mongoose.model<IJob>("Job", JobSchema);
+const JobModel = mongoose.models.Job || mongoose.model<IJob>("Job", JobSchema);
+export default JobModel;

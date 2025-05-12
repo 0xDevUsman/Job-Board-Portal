@@ -25,6 +25,7 @@ const Profile: React.FC = () => {
       const response = await axios.get(`/api/profile/${id}`);
       const user = response.data.user;
       setUser(user);
+      console.log(user);
     };
     if (id) {
       fetchUserProfile();
