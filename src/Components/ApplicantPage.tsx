@@ -3,6 +3,7 @@ import axios from "axios";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
 
 interface Job {
   _id: string;
@@ -27,6 +28,7 @@ interface Application {
 
 const ApplicantPage = () => {
   const [applications, setApplications] = useState<Application[]>([]);
+  const [loading, setLoading] = useState<Record<string, boolean>>({});
   const params = useParams();
   const { id } = params;
 
@@ -34,86 +36,126 @@ const ApplicantPage = () => {
     const getApplicants = async () => {
       try {
         const response = await axios.get(`/api/recruiter/application/${id}`);
-        const applicants: Application[] = response.data.applications;
-        setApplications(applicants);
+        setApplications(response.data.applications);
       } catch (error) {
         console.error("Error fetching applicants:", error);
+        toast.error("Failed to load applicants");
       }
     };
     getApplicants();
   }, [id]);
 
-  // Function to handle status change
+  const updateStatus = async (
+    applicationId: string,
+    newStatus: "Pending" | "Accepted" | "Rejected"
+  ) => {
+    setLoading(prev => ({ ...prev, [applicationId]: true }));
+    
+    try {
+      const response = await axios.patch(
+        `/api/recruiter/application/${applicationId}`,
+        { status: newStatus }
+      );
+
+      setApplications(prev =>
+        prev.map(app =>
+          app._id === applicationId ? response.data.application : app
+        )
+      );
+      toast.success("Status updated successfully");
+    } catch (error) {
+      console.error("Error updating status:", error);
+      toast.error("Failed to update status");
+      // Revert UI on error
+      setApplications(prev => prev);
+    } finally {
+      setLoading(prev => ({ ...prev, [applicationId]: false }));
+    }
+  };
+
   const handleStatusChange = (
     applicationId: string,
     newStatus: "Pending" | "Accepted" | "Rejected"
   ) => {
-    setApplications((prevApplications) =>
-      prevApplications.map((applicant) =>
-        applicant._id === applicationId
-          ? { ...applicant, status: newStatus }
-          : applicant
+    // Optimistic UI update
+    setApplications(prev =>
+      prev.map(app =>
+        app._id === applicationId ? { ...app, status: newStatus } : app
       )
     );
+    // Actual API call
+    updateStatus(applicationId, newStatus);
   };
 
   return (
-    <>
-      <h1 className="text-3xl py-10 font-bold text-blue-600 text-start px-6">
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold text-blue-600 mb-8">
         {applications[0]?.jobId.title} Applicants
       </h1>
 
-      {applications.map((applicant) => (
-        <div
-          key={applicant._id}
-          className="bg-gray-50 flex justify-between px-4 rounded-lg shadow-xl p-4 mb-4 mx-6"
-        >
-          <div>
-            <h2 className="text-xl text-gray-600 mt-1 font-semibold">
-              Applied by{" "}
-              <span className="font-medium text-black">
-                {applicant.userId.firstname} {applicant.userId.lastname}
-              </span>
-            </h2>
-            <h2 className="text-sm text-gray-600 font-semibold">
-              Applied on:{" "}
-              <span className="font-medium text-black">
-                {new Date(applicant.createdAt).toLocaleDateString("en-US", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
-              </span>
-            </h2>
-          </div>
-
-          <div className="flex items-center space-x-4 mt-4">
-            <select
-              value={applicant.status}
-              onChange={(e) =>
-                handleStatusChange(
-                  applicant._id,
-                  e.target.value as "Pending" | "Accepted" | "Rejected"
-                )
-              }
-              className={`p-3 rounded-md border w-full max-w-xs outline-none shadow-sm transition-all font-semibold focus:ring-2`}
+      {applications.length === 0 ? (
+        <p className="text-gray-600">No applicants found</p>
+      ) : (
+        <div className="space-y-4">
+          {applications.map((applicant) => (
+            <div
+              key={applicant._id}
+              className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow"
             >
-              <option value="Pending">Pending</option>
-              <option value="Accepted">Accepted</option>
-              <option value="Rejected">Rejected</option>
-            </select>
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div>
+                  <h2 className="text-xl font-semibold text-gray-800">
+                    {applicant.userId.firstname} {applicant.userId.lastname}
+                  </h2>
+                  <p className="text-gray-600">
+                    Applied on:{" "}
+                    {new Date(applicant.createdAt).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </p>
+                  <p className="text-gray-600">{applicant.userId.email}</p>
+                </div>
 
-            <Link
-              href={applicant.resume}
-              target="_blank"
-              className="ml-4 px-4 py-2 whitespace-nowrap rounded-lg bg-blue-600 text-white font-semibold transition-all duration-200 cursor-pointer hover:bg-blue-500"
-            >
-              View Resume
-            </Link>
-          </div>
+                <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
+                  <select
+                    value={applicant.status}
+                    onChange={(e) =>
+                      handleStatusChange(
+                        applicant._id,
+                        e.target.value as "Pending" | "Accepted" | "Rejected"
+                      )
+                    }
+                    disabled={loading[applicant._id]}
+                    className={`px-4 py-2 rounded-md border focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all ${
+                      applicant.status === "Accepted"
+                        ? "bg-green-100 text-green-800"
+                        : applicant.status === "Rejected"
+                        ? "bg-red-100 text-red-800"
+                        : "bg-yellow-100 text-yellow-800"
+                    }`}
+                  >
+                    <option value="Pending">Pending</option>
+                    <option value="Accepted">Accepted</option>
+                    <option value="Rejected">Rejected</option>
+                  </select>
+
+                  <Link
+                    href={applicant.resume}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-center whitespace-nowrap"
+                  >
+                    View Resume
+                  </Link>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
-      ))}
-    </>
+      )}
+    </div>
   );
 };
 

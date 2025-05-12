@@ -29,12 +29,9 @@ const RecruiterDashboard: React.FC = () => {
 
   const getJob = React.useCallback(async () => {
     try {
-      const response = await axios.get<JobResponse>(
-        "http://localhost:3000/api/recruiter/jobs",
-        {
-          params: { userId: userId },
-        }
-      );
+      const response = await axios.get<JobResponse>("/api/recruiter/jobs", {
+        params: { userId: userId },
+      });
       const jobs = response.data.jobs;
       setJobs(jobs); // Set jobs in the state
       console.log("Jobs:", jobs);
@@ -45,12 +42,9 @@ const RecruiterDashboard: React.FC = () => {
 
   const getApplications = React.useCallback(async () => {
     try {
-      const res = await axios.get(
-        "http://localhost:3000/api/recruiter/application",
-        {
-          params: { userId },
-        }
-      );
+      const res = await axios.get("/api/recruiter/application", {
+        params: { userId },
+      });
       setApplication(res.data.applications);
       console.log("Applications:", res.data.applications);
     } catch (error) {
@@ -183,6 +177,7 @@ interface ApplicationProps {
 }
 
 const ApplicationCard: React.FC<ApplicationProps> = ({ application }) => {
+  const router = useRouter();
   return (
     <div className="bg-gray-50 flex justify-between px-4 rounded-lg shadow-xl p-4 mb-4 w-full">
       <div>
@@ -205,7 +200,15 @@ const ApplicationCard: React.FC<ApplicationProps> = ({ application }) => {
         </h2>
       </div>
       <div className="flex items-center">
-        <button className="px-4 py-2 rounded-lg bg-blue-600 cursor-pointer text-white font-semibold mt-4 hover:bg-blue-500 transition-all duration-100 ml-4">
+        <button
+          onClick={() =>
+            router.push(
+              `/recruiter/applicants/details/${application.userId._id}`
+            )
+          }
+          
+          className="px-4 py-2 rounded-lg bg-blue-600 cursor-pointer text-white font-semibold mt-4 hover:bg-blue-500 transition-all duration-100 ml-4"
+        >
           View Details
         </button>
       </div>

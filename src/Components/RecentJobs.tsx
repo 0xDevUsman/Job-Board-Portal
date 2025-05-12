@@ -21,8 +21,8 @@ const RecentJobs: React.FC = () => {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/job/");
-        const fetchedJobs = response.data.jobs;
+        const response = await axios.get("/api/job/");
+        const fetchedJobs = response.data.jobs; 
 
         // Limit to 4 jobs
         const limitedJobs = fetchedJobs.slice(0, 4);
