@@ -73,6 +73,11 @@ const Profile: React.FC = () => {
           </div>
 
           {/* Right: Buttons */}
+          <button>
+            <span className="text-sm border cursor-pointer hover:opacity-85 bg-blue-500 px-3 py-2 text-white rounded-lg font-bold">
+              Edit Profile
+            </span>
+          </button>
         </div>
 
         {/* Applications */}
@@ -118,3 +123,7 @@ const Profile: React.FC = () => {
 };
 
 export default Profile;
+
+// for recruiters navbars profile will be different as per simple navbar correct that.
+// edit profiles and delete job from profile
+// middlewares
