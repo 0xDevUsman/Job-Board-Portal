@@ -6,7 +6,9 @@ import { motion } from "framer-motion";
 import { FaUserAlt } from "react-icons/fa";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 const RecruiterNavbar = () => {
+  const router = useRouter();
   return (
     <>
       <div>
@@ -35,9 +37,12 @@ const RecruiterNavbar = () => {
               >
                 Post a new Job
               </Link>
-              <Link href={"/profile"}>
+              <button
+                className="cursor-pointer"
+                onClick={() => router.push("/recruiter/profile")}
+              >
                 <FaUserAlt className="w-6 h-6" />
-              </Link>
+              </button>
             </div>
           </motion.div>
         </nav>
