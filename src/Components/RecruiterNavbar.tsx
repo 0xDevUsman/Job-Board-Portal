@@ -5,7 +5,6 @@ import logo from "@/assets/logo.svg";
 import { motion } from "framer-motion";
 import { FaUserAlt } from "react-icons/fa";
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 const RecruiterNavbar = () => {
   const router = useRouter();
@@ -20,23 +19,32 @@ const RecruiterNavbar = () => {
             exit={{ y: -100 }}
             className="w-full h-16 bg-white flex items-center justify-between shadow-md px-16 py-2"
           >
-            <Link href="/" className="flex items-center gap-4">
+            <button
+              onClick={() => router.push("/")}
+              className="flex items-center gap-4"
+            >
               <Image width={40} height={40} src={logo} alt="Logo" />
               <h1 className="text-2xl text-blue-600 font-bold">CAREER FLOW</h1>
-            </Link>
+            </button>
             <div className="flex justify-center items-center gap-6">
-              <Link
+              <button
+                onClick={() => router.push("/")}
                 className="border border-blue-600 hover:bg-blue-600 text-blue-500 hover:text-white cursor-pointer font-semibold px-6 py-2 rounded-lg transition-all duration-100"
-                href={"/"}
               >
                 Go back to home
-              </Link>
-              <Link
-                href={"/recruiter/post-job"}
+              </button>
+              <button
+                onClick={() => router.push("/recruiter/dashboard")}
+                className="border border-blue-600 hover:bg-blue-600 text-blue-500 hover:text-white cursor-pointer font-semibold px-6 py-2 rounded-lg transition-all duration-100"
+              >
+                Go back to Dashboard
+              </button>
+              <button
+                onClick={() => router.push("/recruiter/post-job")}
                 className="bg-blue-600 cursor-pointer hover:bg-blue-500 text-white font-semibold px-6 py-2 rounded-lg transition-all duration-100"
               >
                 Post a new Job
-              </Link>
+              </button>
               <button
                 className="cursor-pointer"
                 onClick={() => router.push("/recruiter/profile")}
