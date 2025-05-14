@@ -124,6 +124,8 @@ const Profile: React.FC = () => {
 
 export default Profile;
 
-// for recruiters navbars profile will be different as per simple navbar correct that. - done
 // edit profiles and delete job from profile
+// so applications status to the users
+// view recruiter's job only
+// edit option in job's
 // middlewares
