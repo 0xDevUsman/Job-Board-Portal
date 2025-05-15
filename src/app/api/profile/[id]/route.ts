@@ -56,3 +56,75 @@ export const GET = async (
     });
   }
 };
+
+export const PATCH = async (
+  req: Request,
+  { params }: { params: Promise<{ id: string }> }
+) => {
+  await dbConnect();
+
+  try {
+    const { id } = await params;
+    const { firstname, lastname, email } = await req.json();
+
+    // Validate required fields (only email is truly required)
+    if (!email) {
+      return new Response(
+        JSON.stringify({ error: "Email is required" }),
+        { status: 400 }
+      );
+    }
+
+    // Check if email is already taken by another user
+    const existingUser = await User.findOne({ email, _id: { $ne: id } });
+    if (existingUser) {
+      return new Response(
+        JSON.stringify({ error: "Email already in use" }),
+        { status: 409 }
+      );
+    }
+
+    // Update only provided fields (partial update)
+    const updateData: Record<string, string> = { email };
+    if (firstname !== undefined) updateData.firstname = firstname;
+    if (lastname !== undefined) updateData.lastname = lastname;
+
+    const updatedUser = await User.findByIdAndUpdate(
+      id,
+      updateData,
+      { new: true }
+    ).select("-password");
+
+    if (!updatedUser) {
+      return new Response(
+        JSON.stringify({ error: "User not found" }),
+        { status: 404 }
+      );
+    }
+
+    return new Response(
+      JSON.stringify({
+        success: true,
+        message: "Profile updated successfully",
+        user: {
+          name: `${updatedUser.firstname || ''} ${updatedUser.lastname || ''}`.trim(),
+          email: updatedUser.email,
+          role: updatedUser.role,
+        },
+      }),
+      {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+  } catch (error) {
+    console.error("Error in PATCH /api/profile/[id]:", error);
+    return new Response(
+      JSON.stringify({ 
+        success: false,
+        error: (error as Error).message 
+      }),
+      { status: 500 }
+    );
+  }
+};
