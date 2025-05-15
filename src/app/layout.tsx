@@ -5,6 +5,7 @@ import { Authprovider } from "@/context/Authprovider";
 import { ToastContainer } from "react-toastify";
 import NavbarWrapper from "@/Components/NavbarWrapper";
 import FooterWrapper from "@/Components/FooterWrapper";
+import { Toaster } from "react-hot-toast";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -34,6 +35,7 @@ export default function RootLayout({
           <NavbarWrapper />
           {children}
           <ToastContainer position="top-right" autoClose={3000} />
+          <Toaster position="top-right" />
           <FooterWrapper />
         </body>
       </Authprovider>

@@ -6,6 +6,7 @@ import RecruiterNavbar from "./RecruiterNavbar";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 const RecruiterProfile = () => {
   interface User {
     id: string;
@@ -79,6 +80,26 @@ const RecruiterProfile = () => {
   }
 
   console.log(jobs);
+
+  const deleteJob = async (jobId: string) => {
+    try {
+      const response = await axios.delete(`/api/recruiter/jobs`, {
+        data: {
+          jobId: jobId,
+          userId: user.id,
+        },
+      });
+      if (response.status === 200) {
+        console.log("Job deleted successfully");
+        toast.success("Job deleted successfully");
+        getJob();
+      } else {
+        console.error("Failed to delete job");
+      }
+    } catch (error) {
+      console.error("Error deleting job:", error);
+    }
+  };
   return (
     <div>
       <RecruiterNavbar />
@@ -138,7 +159,10 @@ const RecruiterProfile = () => {
                     </div>
                     <div className="text-red-500 cursor-pointer">
                       <MdDelete
-                        // onClick={() => handleDelete(app.applicationID)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          deleteJob(app._id);
+                        }}
                         className="w-6 h-6"
                       />
                     </div>

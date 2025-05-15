@@ -124,8 +124,3 @@ const Profile: React.FC = () => {
 
 export default Profile;
 
-// edit profiles and delete job from profile
-// so applications status to the users
-// view recruiter's job only
-// edit option in job's
-// middlewares
