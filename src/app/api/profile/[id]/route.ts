@@ -69,19 +69,17 @@ export const PATCH = async (
 
     // Validate required fields (only email is truly required)
     if (!email) {
-      return new Response(
-        JSON.stringify({ error: "Email is required" }),
-        { status: 400 }
-      );
+      return new Response(JSON.stringify({ error: "Email is required" }), {
+        status: 400,
+      });
     }
 
     // Check if email is already taken by another user
     const existingUser = await User.findOne({ email, _id: { $ne: id } });
     if (existingUser) {
-      return new Response(
-        JSON.stringify({ error: "Email already in use" }),
-        { status: 409 }
-      );
+      return new Response(JSON.stringify({ error: "Email already in use" }), {
+        status: 409,
+      });
     }
 
     // Update only provided fields (partial update)
@@ -89,17 +87,14 @@ export const PATCH = async (
     if (firstname !== undefined) updateData.firstname = firstname;
     if (lastname !== undefined) updateData.lastname = lastname;
 
-    const updatedUser = await User.findByIdAndUpdate(
-      id,
-      updateData,
-      { new: true }
-    ).select("-password");
+    const updatedUser = await User.findByIdAndUpdate(id, updateData, {
+      new: true,
+    }).select("-password");
 
     if (!updatedUser) {
-      return new Response(
-        JSON.stringify({ error: "User not found" }),
-        { status: 404 }
-      );
+      return new Response(JSON.stringify({ error: "User not found" }), {
+        status: 404,
+      });
     }
 
     return new Response(
@@ -107,9 +102,12 @@ export const PATCH = async (
         success: true,
         message: "Profile updated successfully",
         user: {
-          name: `${updatedUser.firstname || ''} ${updatedUser.lastname || ''}`.trim(),
+          id: updatedUser._id.toString(), // Make sure to include ID
+          name: `${updatedUser.firstname || ""} ${
+            updatedUser.lastname || ""
+          }`.trim(),
           email: updatedUser.email,
-          role: updatedUser.role,
+          role: updatedUser.role[0], // Match how you store role in session
         },
       }),
       {
@@ -120,9 +118,9 @@ export const PATCH = async (
   } catch (error) {
     console.error("Error in PATCH /api/profile/[id]:", error);
     return new Response(
-      JSON.stringify({ 
+      JSON.stringify({
         success: false,
-        error: (error as Error).message 
+        error: (error as Error).message,
       }),
       { status: 500 }
     );

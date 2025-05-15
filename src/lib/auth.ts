@@ -32,10 +32,15 @@ export const authOptions: NextAuthOptions = {
         }
 
         await dbConnect();
-        const user = await User.findOne({ email: credentials.email }).select("+password");
+        const user = await User.findOne({ email: credentials.email }).select(
+          "+password"
+        );
         if (!user) throw new Error("User not found");
 
-        const isValid = await bcrypt.compare(credentials.password, user.password);
+        const isValid = await bcrypt.compare(
+          credentials.password,
+          user.password
+        );
         if (!isValid) throw new Error("Invalid credentials");
 
         return {
@@ -78,9 +83,13 @@ export const authOptions: NextAuthOptions = {
       return true;
     },
 
-    async jwt({ token }) {
-      if (!token?.email) return token;
+    async jwt({ token, trigger, session }) {
+      if (trigger === "update") {
+        // Handle session updates
+        return { ...token, ...session.user };
+      }
 
+      if (!token?.email) return token;
       await dbConnect();
       const dbUser = await User.findOne({ email: token.email });
 

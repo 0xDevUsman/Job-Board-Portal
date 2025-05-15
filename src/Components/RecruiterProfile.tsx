@@ -133,15 +133,23 @@ const RecruiterProfile = () => {
       if (response.data.success) {
         toast.success(response.data.message);
 
+        // Update local state
         setUser((prev) => ({
           ...prev,
-          name: `${firstname} ${lastname}`.trim(),
-          email: editedUser.email,
+          name: response.data.user.name,
+          email: response.data.user.email,
         }));
 
+        // Force update the session with the complete user data
         await update({
-          name: `${firstname} ${lastname}`.trim(),
-          email: editedUser.email,
+          ...session,
+          user: {
+            ...session?.user,
+            id: response.data.user.id,
+            name: response.data.user.name,
+            email: response.data.user.email,
+            role: response.data.user.role,
+          },
         });
 
         setIsEditModalOpen(false);
