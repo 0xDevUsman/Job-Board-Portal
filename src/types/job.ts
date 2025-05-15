@@ -5,7 +5,7 @@ export const jobSchema = zod.object({
   company: zod.string(),
   location: zod.string(),
   description: zod.string(),
-  requirements: zod.array(zod.string()),
+  requirements: zod.string(),
   salary: zod.number().optional(),
   jobType: zod.enum(["Full-time", "Part-time", "Contract", "Internship"]),
   postedBy: zod.string(),

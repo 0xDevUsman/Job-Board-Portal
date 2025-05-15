@@ -19,6 +19,7 @@ const Profile: React.FC = () => {
       applicationID: string;
       title: string;
       company: string;
+      status: string;
       dateApplied: string;
     }[];
   } | null>(null);
@@ -125,7 +126,6 @@ const Profile: React.FC = () => {
       toast.error("Failed to delete application");
     }
   };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-12 px-6">
       <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden">
@@ -160,7 +160,9 @@ const Profile: React.FC = () => {
             My Applications
           </h2>
           {user?.applications?.length === 0 ? (
-            <p className="text-gray-500">You haven’t applied to any jobs yet.</p>
+            <p className="text-gray-500">
+              You haven’t applied to any jobs yet.
+            </p>
           ) : (
             <div className="grid gap-4">
               {user?.applications?.map((app, index) => (
@@ -177,10 +179,22 @@ const Profile: React.FC = () => {
                       Applied on {app.dateApplied}
                     </p>
                   </div>
-                  <div className="text-red-500 cursor-pointer">
+                  <div className="flex items-center gap-6">
+                    <span
+                      className={`font-medium ${
+                        app.status === "Accepted"
+                          ? "text-green-600"
+                          : app.status === "Rejected"
+                          ? "text-red-600"
+                          : "text-yellow-600"
+                      }`}
+                    >
+                      {app.status}
+                    </span>
                     <MdDelete
                       onClick={() => handleDelete(app.applicationID)}
-                      className="w-6 h-6"
+                      className="w-6 h-6 text-red-500 cursor-pointer hover:text-red-700 transition-colors"
+                      title="Delete application"
                     />
                   </div>
                 </div>
@@ -195,7 +209,9 @@ const Profile: React.FC = () => {
         <div className="fixed inset-0 bg-gray-200 bg-opacity-70 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
             <div className="flex justify-between items-center border-b p-4">
-              <h2 className="text-xl font-semibold text-gray-800">Edit Profile</h2>
+              <h2 className="text-xl font-semibold text-gray-800">
+                Edit Profile
+              </h2>
               <button
                 onClick={handleCloseModal}
                 className="text-gray-500 hover:text-gray-700"

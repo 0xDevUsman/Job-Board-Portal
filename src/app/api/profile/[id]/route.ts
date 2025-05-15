@@ -39,6 +39,7 @@ export const GET = async (
             applicationID: app._id,
             title: app.jobId?.title || "Unknown",
             company: app.jobId?.company || "Unknown",
+            status : app.status,
             dateApplied: app.createdAt.toLocaleDateString(),
           })),
         },
