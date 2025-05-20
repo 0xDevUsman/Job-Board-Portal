@@ -21,7 +21,7 @@ const RecruiterNavbar = () => {
           >
             <button
               onClick={() => router.push("/")}
-              className="flex items-center gap-4"
+              className="flex items-center gap-4 cursor-pointer"
             >
               <Image width={40} height={40} src={logo} alt="Logo" />
               <h1 className="text-2xl text-blue-600 font-bold">CAREER FLOW</h1>

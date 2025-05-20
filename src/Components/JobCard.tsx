@@ -29,7 +29,7 @@ const JobCard: React.FC<JobCardProps> = ({
   };
   return (
     <div
-      onClick={() => onClickJob(_id)} // Replace "jobId" with the actual job ID
+      onClick={() => onClickJob(_id)}
       className="flex hover:scale-105 transition duration-200 cursor-pointer items-center p-6 bg-white rounded-lg shadow-sm w-full max-w-5xl mt-6"
     >
       <div className="flex-1">

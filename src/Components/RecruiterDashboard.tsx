@@ -93,7 +93,7 @@ const RecruiterDashboard: React.FC = () => {
             </div>
 
             <Link
-              href="/jobs"
+              href="/recruiter/jobs"
               className="block w-full mt-6 text-center bg-blue-600 hover:bg-blue-500 text-white font-semibold py-2 rounded-lg transition duration-150"
             >
               View all jobs
@@ -206,7 +206,6 @@ const ApplicationCard: React.FC<ApplicationProps> = ({ application }) => {
               `/recruiter/applicants/details/${application.userId._id}`
             )
           }
-          
           className="px-4 py-2 rounded-lg bg-blue-600 cursor-pointer text-white font-semibold mt-4 hover:bg-blue-500 transition-all duration-100 ml-4"
         >
           View Details

@@ -172,7 +172,7 @@ const FilterComponent = ({
 
         <button
           onClick={handleClearAll}
-          className="w-full mt-4 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 focus:outline-none"
+          className="w-full cursor-pointer mt-4 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 focus:outline-none"
         >
           Clear all
         </button>
@@ -191,7 +191,7 @@ interface JobListingProps {
   timeAgo: string;
 }
 
-const JobListing = ({ title, company, location, salary }: JobListingProps) => (
+export const JobListing = ({ title, company, location, salary }: JobListingProps) => (
   <div className="rounded-lg p-4 mb-4 shadow-md bg-white cursor-pointer hover:shadow-lg transition duration-200 hover:scale-100">
     <div className="flex justify-between items-start">
       <div>

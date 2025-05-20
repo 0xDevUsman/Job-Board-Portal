@@ -2,7 +2,9 @@
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
+import toast from "react-hot-toast";
 
 const Postjob = () => {
   const [title, setTitle] = useState("");
@@ -12,13 +14,14 @@ const Postjob = () => {
   const [requirements, setRequirements] = useState("");
   const [salary, setSalary] = useState<number | "">("");
   const [jobType, setJobType] = useState("");
+  const router = useRouter();
   const { data: session } = useSession();
   const userId = session?.user?.id;
   if (!session) {
     alert("You must be logged in to post a job.");
     return;
   }
-
+  console.log(userId);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -34,7 +37,7 @@ const Postjob = () => {
       });
 
       if (res.status === 201 || res.status === 200) {
-        alert("Job posted successfully!");
+        toast.success("Job posted successfully!");
         // Clear the form
         setTitle("");
         setCompany("");
@@ -43,6 +46,7 @@ const Postjob = () => {
         setRequirements("");
         setSalary("");
         setJobType("");
+        router.push("/recruiter/dashboard");
       }
     } catch (error) {
       console.error("Error posting job:", error);
