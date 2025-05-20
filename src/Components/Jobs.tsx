@@ -1,6 +1,7 @@
 "use client";
 
 import axios from "axios";
+import { useSession } from "next-auth/react";
 import React, { useCallback, useEffect, useState } from "react";
 
 const useDebounce = <T,>(value: T, delay: number) => {
@@ -191,7 +192,12 @@ interface JobListingProps {
   timeAgo: string;
 }
 
-export const JobListing = ({ title, company, location, salary }: JobListingProps) => (
+export const JobListing = ({
+  title,
+  company,
+  location,
+  salary,
+}: JobListingProps) => (
   <div className="rounded-lg p-4 mb-4 shadow-md bg-white cursor-pointer hover:shadow-lg transition duration-200 hover:scale-100">
     <div className="flex justify-between items-start">
       <div>
@@ -237,7 +243,8 @@ const Jobs = () => {
   const indexOfFirstJob = indexOfLastJob - jobsPerPage;
   const currentJobs = filteredJobs.slice(indexOfFirstJob, indexOfLastJob);
   const totalPages = Math.ceil(filteredJobs.length / jobsPerPage);
-
+  const { data: session } = useSession();
+  const role = session?.user?.role;
   // Fetch jobs from the API
   const getJob = async () => {
     try {
@@ -354,7 +361,11 @@ const Jobs = () => {
     const job = res.data.job;
     console.log(job);
     // Navigate to job detail page
-    window.location.href = `/jobs/${_id}`;
+    if (role === "recruiter") {
+      window.location.href = `/recruiter/jobs/${_id}`;
+    } else {
+      window.location.href = `/jobs/${_id}`;
+    }
   };
 
   return (

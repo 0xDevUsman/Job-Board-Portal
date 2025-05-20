@@ -1,11 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Authprovider } from "@/context/Authprovider";
-import { ToastContainer } from "react-toastify";
-import NavbarWrapper from "@/Components/NavbarWrapper";
-import FooterWrapper from "@/Components/FooterWrapper";
-import { Toaster } from "react-hot-toast";
+import ClientLayout from "@/Components/ClientLayout";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -23,22 +20,16 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
-      <Authprovider>
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-100`}
-        >
-          <NavbarWrapper />
-          {children}
-          <ToastContainer position="top-right" autoClose={3000} />
-          <Toaster position="top-right" />
-          <FooterWrapper />
-        </body>
-      </Authprovider>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-100`}
+      >
+        <ClientLayout>{children}</ClientLayout>
+      </body>
     </html>
   );
 }
