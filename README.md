@@ -1,174 +1,62 @@
-# Job Board Portal — Next.js Full-Stack Application
+**JobBoardPro — Full-Stack Job Board Platform**
+-----------------------------------------------
 
-A modern, full-stack Job Board Portal built with [Next.js](https://nextjs.org/) (App Router), featuring **role-based authentication** using [NextAuth.js](https://next-auth.js.org/), separate dashboards for employees and recruiters, and a fully responsive UI powered by Tailwind CSS.
+JobBoardPro is a modern job board application built with Next.js (App Router), enabling seamless interaction between job seekers and recruiters. It features role-based authentication, real-time profile updates, and a fully responsive design — all backed by a secure and scalable architecture.
 
----
+**🔑** _**Core Features**_**:**
 
-## Table of Contents
+*   Role-based login: Employee, Recruiter, Admin
+    
+*   Authentication via Credentials, Google, and GitHub (NextAuth.js)
+    
+*   Employee dashboard to browse and apply for jobs
+    
+*   Recruiter dashboard to post, update, and manage listings
+    
+*   Secure APIs with middleware and route protection
+    
+*   Real-time session updates and profile editing
+    
+*   Fully responsive UI using Tailwind CSS
+    
 
-1. [Overview](#overview)
-2. [Features](#features)
-3. [Tech Stack](#tech-stack)
-4. [Getting Started](#getting-started)
-5. [Environment Variables](#environment-variables)
-6. [Project Structure](#project-structure)
-7. [Authentication & Authorization](#authentication--authorization)
-8. [Middleware & Route Protection](#middleware--route-protection)
-9. [Responsive Design](#responsive-design)
-10. [Deployment](#deployment)
-11. [License](#license)
-12. [Contact](#contact)
+**🧰** _**Tech Stack**_**:**
 
----
+*   **Frontend:** Next.js (App Router), React, Tailwind CSS
+    
+*   **Backend:** Next.js API Routes, MongoDB
+    
+*   **Authentication:** NextAuth.js (Credentials + OAuth)
+    
+*   **Database:** MongoDB
+    
+*   **Deployment:** Vercel
+    
 
-## Overview
+**🚀** _**Setup Instructions**_**:**
 
-This project connects job seekers (employees) and job providers (recruiters) in a seamless platform that provides:
+1.  Clone the repo:git clone https://github.com/0xDevUsman/job-board-portal.git
+    
+2.  Navigate to the project folder:cd job-board-portal
+    
+3.  Install dependencies:npm install
+    
+4.  MONGODB\_URI=your\_mongodb\_uri
+    
+5.  NEXTAUTH\_SECRET=your\_secret
+    
+6.  GOOGLE\_CLIENT\_ID=your\_google\_id
+    
+7.  GOOGLE\_CLIENT\_SECRET=your\_google\_secret
+    
+8.  GITHUB\_ID=your\_github\_id
+    
+9.  GITHUB\_SECRET=your\_github\_secret
+    
 
-- Secure authentication with multiple providers (Credentials, Google, GitHub)
-- Role-based dashboards and access control
-- CRUD operations for job listings
-- Real-time profile updates and session management
-- Fully responsive design optimized for all device sizes
+_**Run the app locally**_:npm run dev
 
----
+1.  Open in browser:http://localhost:3000
+    
 
-## Features
-
-- **Multi-role Authentication:** Employee, Recruiter, and Admin user roles
-- **NextAuth.js Integration:** Supports Credentials + OAuth providers
-- **Protected Routes:** Middleware enforces role-based access
-- **Responsive UI:** Mobile-first design with Tailwind CSS
-- **App Router:** Modern routing with server/client components
-- **Profile Management:** Dynamic profile updates
-- **Clean Architecture:** Scalable code structure
-
----
-
-## Tech Stack
-
-| Category       | Technologies                      |
-| -------------- | --------------------------------- |
-| Frontend       | Next.js, React, Tailwind CSS      |
-| Backend        | Next.js API routes                |
-| Authentication | NextAuth.js (Credentials + OAuth) |
-| Database       | MongoDB                           |
-| Deployment     | Vercel                            |
-
----
-
-## Getting Started
-
-### Prerequisites
-
-- Node.js ≥ v18
-- Package manager (npm/yarn/pnpm/bun)
-- MongoDB connection URI
-- OAuth credentials (optional)
-- NextAuth secret key
-
-### Installation
-
-```bash
-git clone https://github.com/yourusername/job-board-portal.git
-cd job-board-portal
-npm install
-Alternative package managers:
-
-bash
-Copy
-Edit
-yarn install
-# or
-pnpm install
-# or
-bun install
-Running the App
-bash
-Copy
-Edit
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-Access the app at: http://localhost:3000
-
-Environment Variables
-Required .env.local configuration:
-
-env
-Copy
-Edit
-MONGODB_URI=your_mongodb_uri
-NEXTAUTH_SECRET=your_secret_key
-GOOGLE_CLIENT_ID=your_google_id
-GOOGLE_CLIENT_SECRET=your_google_secret
-GITHUB_ID=your_github_id
-GITHUB_SECRET=your_github_secret
-Project Structure
-bash
-Copy
-Edit
-/app
-  /employee       # Employee dashboard
-  /recruiter      # Recruiter dashboard
-  /api            # API endpoints
-  /auth           # Authentication routes
-/components       # Shared UI components
-/lib             # Utilities and helpers
-/middleware.ts    # Auth middleware
-Authentication & Authorization
-JWT-based session management
-
-Role validation in session callbacks
-
-Protected API routes
-
-CSRF protection
-
-Middleware & Route Protection
-Auth state verification
-
-Role-based redirects
-
-Unauthorized access handling
-
-Secure cookie management
-
-Responsive Design
-Mobile-first approach
-
-Responsive breakpoints
-
-Adaptive components
-
-Cross-device testing
-
-Deployment
-Connect your Vercel account
-
-Import Git repository
-
-Configure environment variables
-
-Deploy!
-
-
-
-License
-MIT License © 2023 [0xDevUsman]
-
-Contact
-GitHub: @0xDevUsman
-
-Email: ua1226925@gmail.com
-
-LinkedIn: [LinkedIn](https://www.linkedin.com/in/usman-ali-4939ab289/)
-
-
-If you want, I can help you customize it further (like adding screenshots, badges, or a demo link). Just let me know!
-
-```
+**📬 Contact:**GitHub: [0xDevUsman](https://github.com/0xDevUsman)Email: [your.email@example.com](mailto:your.email@example.com)
