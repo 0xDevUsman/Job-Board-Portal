@@ -1,35 +1,49 @@
-export { default } from "next-auth/middleware";
 import { NextRequest, NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
+import type { JWT } from "next-auth/jwt";
 
 export async function middleware(request: NextRequest) {
-  const token = await getToken({
+  const token: JWT | null = await getToken({
     req: request,
-    secret: process.env.SECRET, // Should be NEXTAUTH_SECRET in newer versions
+    secret: process.env.NEXTAUTH_SECRET,
   });
 
-  const url = request.nextUrl;
+  const { pathname } = request.nextUrl;
+  const isPublicPath = ["/", "/login", "/register"].some((path) =>
+    pathname.startsWith(path)
+  );
 
-  // If user is authenticated and trying to access login/register
   if (
     token &&
-    (url.pathname.startsWith("/login") || url.pathname.startsWith("/register"))
+    (pathname.startsWith("/login") || pathname.startsWith("/register"))
   ) {
     return NextResponse.redirect(new URL("/", request.url));
   }
 
-  // If user is not authenticated and trying to access login/register
-  if (
-    !token &&
-    (url.pathname.startsWith("/login") || url.pathname.startsWith("/register"))
-  ) {
-    return NextResponse.next(); // Allow access to login/register pages
+  if (!token && isPublicPath) {
+    return NextResponse.next();
   }
 
-  // Default case - could add more logic for protected routes
+  if (!token && !isPublicPath) {
+    return NextResponse.redirect(new URL("/login", request.url));
+  }
+
+  // ✅ Role-based route protection
+  if (pathname.startsWith("/recruiter") && token?.role !== "recruiter") {
+    return NextResponse.redirect(new URL("/unauthorized", request.url));
+  }
+
+  if (pathname.startsWith("/employee") && token?.role !== "employee") {
+    return NextResponse.redirect(new URL("/unauthorized", request.url));
+  }
+
+  if (pathname.startsWith("/admin") && token?.role !== "admin") {
+    return NextResponse.redirect(new URL("/unauthorized", request.url));
+  }
+
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/login", "/register"], // Works fine as is
+  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
 };
