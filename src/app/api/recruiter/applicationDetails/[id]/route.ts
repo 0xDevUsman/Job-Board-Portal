@@ -1,17 +1,17 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextResponse } from "next/server";
 import mongoose from "mongoose";
 import Application from "@/models/application";
 import { dbConnect } from "@/lib/db";
 import Job from "@/models/jobs";
 import User from "@/models/user";
-export const GET = async (
-  request: Request,
-  { params }: { params: Promise<{ id: string }> }
-) => {
+
+export const GET = async (request: Request, context:any) => {
   try {
     await dbConnect();
 
-    const { id } = await params;
+    // No await here — params is a plain object
+    const { id } = context.params as { id: string };
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json(
@@ -19,6 +19,8 @@ export const GET = async (
         { status: 400 }
       );
     }
+
+    // Register models if not already registered (for hot reload/dev mode)
     if (!mongoose.models.Job) {
       mongoose.model("Job", Job.schema);
     }
@@ -64,14 +66,11 @@ export const GET = async (
   }
 };
 
-export const PATCH = async (
-  request: Request,
-  { params }: { params: { id: string } }
-) => {
+export const PATCH = async (request: Request, context: any) => {
   try {
     await dbConnect();
 
-    const { id } = params;
+    const { id } = context.params as { id: string };
     const { status } = await request.json();
 
     if (!mongoose.Types.ObjectId.isValid(id)) {

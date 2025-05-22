@@ -1,17 +1,16 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import User from "@/models/user"; // ✅ Import User model
+import User from "@/models/user";
 import { dbConnect } from "@/lib/db";
 import Job from "@/models/jobs";
 import mongoose from "mongoose";
 import { NextResponse } from "next/server";
 
-export const GET = async (
-  req: Request,
-  context: { params: { id: string } }
-) => {
+export const GET = async (req: Request, context:any) => {
   try {
     await dbConnect();
-    const { id } = await context.params;
+
+    const { id } = context.params;  // no await here
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json({ message: "Invalid job ID" }, { status: 400 });

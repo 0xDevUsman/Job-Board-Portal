@@ -54,7 +54,7 @@ export default function Register({
           "Registration failed. Please try again."
         : "An unexpected error occurred. Please try again.";
       console.error("Registration failed:", errorMessage);
-      alert(errorMessage);
+      toast.error(errorMessage);
     }
   };
 

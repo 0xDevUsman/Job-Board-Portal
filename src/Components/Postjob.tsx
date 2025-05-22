@@ -18,7 +18,7 @@ const Postjob = () => {
   const { data: session } = useSession();
   const userId = session?.user?.id;
   if (!session) {
-    alert("You must be logged in to post a job.");
+    toast.error("You must be logged in to post a job.");
     return;
   }
   console.log(userId);
@@ -50,7 +50,7 @@ const Postjob = () => {
       }
     } catch (error) {
       console.error("Error posting job:", error);
-      alert("Failed to post job. Please try again.");
+      toast.error("Failed to post job. Please try again.");
     }
   };
 
