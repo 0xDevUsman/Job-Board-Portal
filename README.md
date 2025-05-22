@@ -1,62 +1,90 @@
-**JobBoardPro — Full-Stack Job Board Platform**
------------------------------------------------
+# TalentGrid - TalentGrid — Your Ultimate Job Board Portal
 
-JobBoardPro is a modern job board application built with Next.js (App Router), enabling seamless interaction between job seekers and recruiters. It features role-based authentication, real-time profile updates, and a fully responsive design — all backed by a secure and scalable architecture.
+Welcome to **TalentGrid**, an advanced and feature-rich job board portal designed to provide a seamless and efficient platform for connecting talent with opportunity.
 
-**🔑** _**Core Features**_**:**
+## 🌐 Live Demo
 
-*   Role-based login: Employee, Recruiter, Admin
-    
-*   Authentication via Credentials, Google, and GitHub (NextAuth.js)
-    
-*   Employee dashboard to browse and apply for jobs
-    
-*   Recruiter dashboard to post, update, and manage listings
-    
-*   Secure APIs with middleware and route protection
-    
-*   Real-time session updates and profile editing
-    
-*   Fully responsive UI using Tailwind CSS
-    
+🔗 **[TalentGrid](https://mytechhaven.vercel.app/)** - Explore the live version of the project.
 
-**🧰** _**Tech Stack**_**:**
+---
 
-*   **Frontend:** Next.js (App Router), React, Tailwind CSS
-    
-*   **Backend:** Next.js API Routes, MongoDB
-    
-*   **Authentication:** NextAuth.js (Credentials + OAuth)
-    
-*   **Database:** MongoDB
-    
-*   **Deployment:** Vercel
-    
+## 🚀 Features
 
-**🚀** _**Setup Instructions**_**:**
+✅ Modern UI/UX with Next.js & Tailwind CSS
+✅ Secure Authentication (Login, Register)
+✅ Job Listings & Categories with Advanced Filters
+✅ Job Application & Tracking System
+✅ Employer & Candidate Dashboards
+✅ Resume Upload, Management & Parsing
+✅ User Profile Management with Role-Based Access
+✅ Notifications & Email Alerts for Job Matches
+✅ Admin Panel for Managing Jobs and Users
+✅ API Routes for Backend Operations
+✅ Fully Responsive Design for Mobile & Desktop
+✅ Search Functionality with Keyword & Location
+✅ Integration with Third-Party Services (e.g., LinkedIn, Google Jobs)
+---
 
-1.  Clone the repo:git clone https://github.com/0xDevUsman/job-board-portal.git
-    
-2.  Navigate to the project folder:cd job-board-portal
-    
-3.  Install dependencies:npm install
-    
-4.  MONGODB\_URI=your\_mongodb\_uri
-    
-5.  NEXTAUTH\_SECRET=your\_secret
-    
-6.  GOOGLE\_CLIENT\_ID=your\_google\_id
-    
-7.  GOOGLE\_CLIENT\_SECRET=your\_google\_secret
-    
-8.  GITHUB\_ID=your\_github\_id
-    
-9.  GITHUB\_SECRET=your\_github\_secret
-    
+## 📦 Tech Stack
 
-_**Run the app locally**_:npm run dev
+- **Frontend:** Next.js, React, Tailwind CSS  
+- **Backend:** Node.js, Express.js, MongoDB  
+- **Authentication:** JWT (JSON Web Token) & OAuth (Google, GitHub)  
+- **Resume Storage:**  Cloudinary
+- **Deployment:** Vercel 
+---
 
-1.  Open in browser:http://localhost:3000
-    
+## 🛠 Installation & Setup
 
-**📬 Contact:**GitHub: [0xDevUsman](https://github.com/0xDevUsman)Email: [your.email@example.com](mailto:your.email@example.com)
+### 
+### 1️⃣ Clone the Repository  
+```sh
+git clone https://github.com/0xDevUsman/Job-Board-Portal.git
+cd job-board-portal
+```
+
+### 2️⃣ Install Dependencies
+```sh
+npm install
+# or
+yarn install
+```
+
+### 3️⃣ Setup Environment Variables
+Create a `.env.local` file in the root directory and add the following:
+```env
+MONGODB_URI=your_mongodb_connection_string
+JWT_SECRET=your_secret_key
+NEXT_PUBLIC_STRIPE_KEY=your_stripe_public_key
+```
+
+### 4️⃣ Run the Development Server
+```sh
+npm run dev
+# or
+yarn dev
+```
+Open []() to see the app.
+
+---
+## 👨‍💻 Contribution
+
+We welcome contributions! To contribute:
+1. Fork the repo
+2. Create a feature branch (`git checkout -b feature-branch`)
+3. Commit changes (`git commit -m 'Added new feature'`)
+4. Push to the branch (`git push origin feature-branch`)
+5. Open a Pull Request
+
+---
+
+## 📄 License
+
+This project is licensed under the **MIT License**.
+
+---
+
+## 📬 Contact
+
+For any queries or suggestions, reach out to me:  
+🐙 GitHub: [0xDevUsman](https://github.com/0xDevUsman)  
