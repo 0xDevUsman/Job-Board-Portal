@@ -4,7 +4,7 @@ Welcome to **TalentGrid**, an advanced and feature-rich job board portal designe
 
 ## 🌐 Live Demo
 
-🔗 **[TechHaven](https://mytechhaven.vercel.app/)** - Explore the live version of the project.
+🔗 **[TalentGrid](https://mytechhaven.vercel.app/)** - Explore the live version of the project.
 
 ---
 
