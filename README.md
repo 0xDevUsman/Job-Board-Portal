@@ -1,36 +1,75 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Job Board Portal — Next.js Full-Stack Application
+
+A modern, full-stack Job Board Portal built with [Next.js](https://nextjs.org) (App Router), featuring **role-based authentication** using [NextAuth.js](https://next-auth.js.org), separate dashboards for employees and recruiters, and a fully responsive UI powered by Tailwind CSS.
+
+---
+
+## Table of Contents
+
+- [Overview](#overview)  
+- [Features](#features)  
+- [Tech Stack](#tech-stack)  
+- [Getting Started](#getting-started)  
+- [Environment Variables](#environment-variables)  
+- [Project Structure](#project-structure)  
+- [Authentication & Authorization](#authentication--authorization)  
+- [Middleware & Route Protection](#middleware--route-protection)  
+- [Responsive Design](#responsive-design)  
+- [Deployment](#deployment)  
+- [License](#license)  
+- [Contact](#contact)  
+
+---
+
+## Overview
+
+This project connects job seekers (employees) and job providers (recruiters) in a seamless platform that provides:
+
+- Secure authentication with multiple providers (Credentials, Google, GitHub)  
+- Role-based dashboards and access control  
+- CRUD operations for job listings  
+- Real-time profile updates and session management  
+- Fully responsive design optimized for all device sizes  
+
+---
+
+## Features
+
+- **Multi-role Authentication:** Employee, Recruiter, and Admin user roles with distinct access rights  
+- **NextAuth.js Integration:** Supports Credentials and OAuth providers  
+- **Protected Routes:** Middleware enforces authentication and role-based access  
+- **Responsive UI:** Tailwind CSS for mobile-first design  
+- **Next.js App Router:** Modern routing with server and client components  
+- **Profile Management:** Users can update their profile information dynamically  
+- **Clean Code Structure:** Scalable and maintainable codebase  
+
+---
+
+## Tech Stack
+
+- **Frontend:** Next.js (App Router), React, Tailwind CSS  
+- **Backend:** Next.js API routes, Node.js  
+- **Authentication:** NextAuth.js (Credentials, Google, GitHub)  
+- **Database:** MongoDB (with preferred ODM)  
+- **Deployment:** Vercel  
+
+---
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js v18 or higher  
+- npm, yarn, pnpm, or bun  
+- MongoDB connection URI  
+- OAuth credentials for Google and GitHub (optional)  
+- NextAuth secret key  
+
+### Installation
+
+Clone the repo and install dependencies:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+git clone https://github.com/0xDevUsman/Job-Board-Portal.git
+cd job-board-portal
+npm install
