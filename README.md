@@ -4,25 +4,24 @@ Welcome to **TalentGrid**, an advanced and feature-rich job board portal designe
 
 ## 🌐 Live Demo
 
-🔗 **[TalentGrid](https://mytechhaven.vercel.app/)** - Explore the live version of the project.
+🔗 **[TechHaven](https://mytechhaven.vercel.app/)** - Explore the live version of the project.
 
 ---
 
 ## 🚀 Features
-
-✅ Modern UI/UX with Next.js & Tailwind CSS
-✅ Secure Authentication (Login, Register)
-✅ Job Listings & Categories with Advanced Filters
-✅ Job Application & Tracking System
-✅ Employer & Candidate Dashboards
-✅ Resume Upload, Management & Parsing
-✅ User Profile Management with Role-Based Access
-✅ Notifications & Email Alerts for Job Matches
-✅ Admin Panel for Managing Jobs and Users
-✅ API Routes for Backend Operations
-✅ Fully Responsive Design for Mobile & Desktop
-✅ Search Functionality with Keyword & Location
-✅ Integration with Third-Party Services (e.g., LinkedIn, Google Jobs)
+- ✅ Modern UI/UX with Next.js & Tailwind CSS
+- ✅ Secure Authentication (Login, Register)
+- ✅ Job Listings & Categories with Advanced Filters
+- ✅ Job Application & Tracking System
+- ✅ Employer & Candidate Dashboards
+- ✅ Resume Upload, Management & Parsing
+- ✅ User Profile Management with Role-Based Access
+- ✅ Notifications & Email Alerts for Job Matches
+- ✅ Admin Panel for Managing Jobs and Users
+- ✅ API Routes for Backend Operations
+- ✅ Fully Responsive Design for Mobile & Desktop
+- ✅ Search Functionality with Keyword & Location
+- ✅ Integration with Third-Party Services (e.g., LinkedIn, Google Jobs)
 ---
 
 ## 📦 Tech Stack
