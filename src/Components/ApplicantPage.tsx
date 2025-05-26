@@ -1,4 +1,5 @@
 "use client";
+
 import axios from "axios";
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -49,16 +50,16 @@ const ApplicantPage = () => {
     applicationId: string,
     newStatus: "Pending" | "Accepted" | "Rejected"
   ) => {
-    setLoading(prev => ({ ...prev, [applicationId]: true }));
-    
+    setLoading((prev) => ({ ...prev, [applicationId]: true }));
+
     try {
       const response = await axios.patch(
         `/api/recruiter/application/${applicationId}`,
         { status: newStatus }
       );
 
-      setApplications(prev =>
-        prev.map(app =>
+      setApplications((prev) =>
+        prev.map((app) =>
           app._id === applicationId ? response.data.application : app
         )
       );
@@ -66,10 +67,8 @@ const ApplicantPage = () => {
     } catch (error) {
       console.error("Error updating status:", error);
       toast.error("Failed to update status");
-      // Revert UI on error
-      setApplications(prev => prev);
     } finally {
-      setLoading(prev => ({ ...prev, [applicationId]: false }));
+      setLoading((prev) => ({ ...prev, [applicationId]: false }));
     }
   };
 
@@ -77,34 +76,33 @@ const ApplicantPage = () => {
     applicationId: string,
     newStatus: "Pending" | "Accepted" | "Rejected"
   ) => {
-    // Optimistic UI update
-    setApplications(prev =>
-      prev.map(app =>
+    setApplications((prev) =>
+      prev.map((app) =>
         app._id === applicationId ? { ...app, status: newStatus } : app
       )
     );
-    // Actual API call
     updateStatus(applicationId, newStatus);
   };
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-blue-600 mb-8">
+      <h1 className="text-2xl sm:text-3xl font-bold text-blue-600 mb-6 sm:mb-8 text-center sm:text-left">
         {applications[0]?.jobId.title} Applicants
       </h1>
 
       {applications.length === 0 ? (
-        <p className="text-gray-600">No applicants found</p>
+        <p className="text-gray-600 text-center">No applicants found</p>
       ) : (
         <div className="space-y-4">
           {applications.map((applicant) => (
             <div
               key={applicant._id}
-              className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow"
+              className="bg-white rounded-lg shadow-md p-4 sm:p-6 hover:shadow-lg transition-shadow"
             >
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                {/* Applicant Info */}
                 <div>
-                  <h2 className="text-xl font-semibold text-gray-800">
+                  <h2 className="text-lg sm:text-xl font-semibold text-gray-800">
                     {applicant.userId.firstname} {applicant.userId.lastname}
                   </h2>
                   <p className="text-gray-600">
@@ -118,7 +116,8 @@ const ApplicantPage = () => {
                   <p className="text-gray-600">{applicant.userId.email}</p>
                 </div>
 
-                <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
+                {/* Status + Resume */}
+                <div className="flex flex-col sm:flex-row gap-3 sm:items-center">
                   <select
                     value={applicant.status}
                     onChange={(e) =>
@@ -128,7 +127,7 @@ const ApplicantPage = () => {
                       )
                     }
                     disabled={loading[applicant._id]}
-                    className={`px-4 py-2 rounded-md border focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all ${
+                    className={`px-4 py-2 rounded-md border focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all w-full sm:w-auto ${
                       applicant.status === "Accepted"
                         ? "bg-green-100 text-green-800"
                         : applicant.status === "Rejected"
@@ -145,7 +144,7 @@ const ApplicantPage = () => {
                     href={applicant.resume}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-center whitespace-nowrap"
+                    className="block text-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors w-full sm:w-auto"
                   >
                     View Resume
                   </Link>

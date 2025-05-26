@@ -6,7 +6,7 @@ import RecruiterNavbar from "./RecruiterNavbar";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-// Define TypeScript interfaces for job data
+
 interface Job {
   _id: string;
   title: string;
@@ -15,26 +15,36 @@ interface Job {
   applicantsCount: number;
 }
 
+interface User {
+  _id: string;
+  firstname: string;
+  lastname: string;
+}
+
+interface Application {
+  _id: string;
+  jobId: Job;
+  userId: User;
+  status: string;
+  createdAt: string;
+}
+
 interface JobResponse {
   jobs: Job[];
 }
 
-// RecruiterDashboard Component
 const RecruiterDashboard: React.FC = () => {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [application, setApplication] = useState<Application[]>([]);
   const { data: session } = useSession();
   const userId = session?.user?.id;
-  console.log("User ID:", userId);
 
   const getJob = React.useCallback(async () => {
     try {
       const response = await axios.get<JobResponse>("/api/recruiter/jobs", {
-        params: { userId: userId },
+        params: { userId },
       });
-      const jobs = response.data.jobs;
-      setJobs(jobs); // Set jobs in the state
-      console.log("Jobs:", jobs);
+      setJobs(response.data.jobs);
     } catch (error) {
       console.error("Error fetching jobs:", error);
     }
@@ -46,10 +56,9 @@ const RecruiterDashboard: React.FC = () => {
         params: { userId },
       });
       setApplication(res.data.applications);
-      console.log("Applications:", res.data.applications);
     } catch (error) {
       console.error("Error fetching applications:", error);
-      setApplication([]); // Prevent crash on error
+      setApplication([]);
     }
   }, [userId]);
 
@@ -58,7 +67,7 @@ const RecruiterDashboard: React.FC = () => {
       getJob();
       getApplications();
     }
-  }, [getJob, userId, getApplications]);
+  }, [userId, getJob, getApplications]);
 
   if (!userId) {
     return (
@@ -69,50 +78,51 @@ const RecruiterDashboard: React.FC = () => {
       </div>
     );
   }
+
   return (
     <>
       <RecruiterNavbar />
-      <div className="px-6 w-full h-full">
-        <h1 className="text-blue-600 text-4xl font-bold mt-10 mb-6 text-center">
+      <div className="px-4 sm:px-6 lg:px-10 py-10 w-full min-h-screen bg-gray-50">
+        <h1 className="text-blue-600 text-4xl font-bold text-center mb-8">
           Dashboard
         </h1>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-          {/* Posted Jobs Section */}
-          <div className="bg-white rounded-2xl shadow-lg p-6 flex flex-col justify-between h-[600px]">
-            <div className="space-y-4 overflow-y-auto scrollbar-thin pr-2">
-              <h2 className="text-2xl font-bold mb-4 text-gray-800">
-                Posted Jobs
-              </h2>
-              {jobs.length === 0 && (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Posted Jobs */}
+          <div className="bg-white rounded-2xl shadow-md p-6 flex flex-col h-[600px]">
+            <h2 className="text-2xl font-bold mb-4 text-gray-800">
+              Posted Jobs
+            </h2>
+            <div className="flex-1 overflow-y-auto scrollbar-thin pr-2 space-y-4">
+              {jobs.length === 0 ? (
                 <p className="text-gray-500">No jobs posted yet.</p>
+              ) : (
+                jobs.map((job) => <JobCard key={job._id} job={job} />)
               )}
-              {jobs.map((job) => (
-                <JobCard key={job._id} job={job} />
-              ))}
             </div>
 
             <Link
               href="/recruiter/jobs"
-              className="block w-full mt-6 text-center bg-blue-600 hover:bg-blue-500 text-white font-semibold py-2 rounded-lg transition duration-150"
+              className="mt-6 text-center bg-blue-600 hover:bg-blue-500 text-white font-semibold py-2 rounded-lg transition duration-150"
             >
               View all jobs
             </Link>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-lg p-6 h-[600px]">
+          {/* Applications */}
+          <div className="bg-white rounded-2xl shadow-md p-6 h-[600px] flex flex-col">
             <h2 className="text-2xl font-bold mb-4 text-gray-800">
               Recent Applications
             </h2>
-            {application.length > 0 ? (
-              <div className="space-y-4 overflow-y-auto scrollbar-thin pr-2">
-                {application.map((app) => (
+            <div className="flex-1 overflow-y-auto scrollbar-thin pr-2 space-y-4">
+              {application.length > 0 ? (
+                application.map((app) => (
                   <ApplicationCard key={app._id} application={app} />
-                ))}
-              </div>
-            ) : (
-              <p className="text-gray-500">No applications yet.</p>
-            )}
+                ))
+              ) : (
+                <p className="text-gray-500">No applications yet.</p>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -122,34 +132,35 @@ const RecruiterDashboard: React.FC = () => {
 
 export default RecruiterDashboard;
 
+// ------------------------
 // JobCard Component
+// ------------------------
 interface JobCardProps {
-  job: Job; // Define the props that JobCard receives
+  job: Job;
 }
 
 const JobCard: React.FC<JobCardProps> = ({ job }) => {
   const router = useRouter();
 
   return (
-    <div className="bg-gray-50 rounded-lg shadow-xl p-4 mb-4 w-full">
-      <h2 className="text-xl font-bold">{job.title}</h2>{" "}
-      <h2 className="text-base text-gray-600 mt-1 font-semibold">
-        Location :{" "}
-        <span className="font-medium text-black">{job.location}</span>{" "}
-      </h2>
-      <h2 className="text-sm text-gray-600 font-semibold">
-        Posted on :{" "}
-        <span className="font-medium text-black">
+    <div className="bg-gray-50 rounded-lg shadow p-4 w-full">
+      <h3 className="text-xl font-bold text-gray-800">{job.title}</h3>
+      <p className="text-sm text-gray-600 mt-1">
+        Location: <span className="text-black">{job.location}</span>
+      </p>
+      <p className="text-sm text-gray-600">
+        Posted on:{" "}
+        <span className="text-black">
           {new Date(job.createdAt).toLocaleDateString("en-US", {
             year: "numeric",
             month: "long",
             day: "numeric",
           })}
-        </span>{" "}
-      </h2>
+        </span>
+      </p>
       <button
         onClick={() => router.push(`/recruiter/applicants/${job._id}`)}
-        className="px-4 py-2 rounded-lg bg-blue-600 cursor-pointer text-white font-semibold mt-4 hover:bg-blue-500 transition-all duration-100"
+        className="mt-4 px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-sm font-semibold transition"
       >
         View Applications
       </button>
@@ -157,60 +168,47 @@ const JobCard: React.FC<JobCardProps> = ({ job }) => {
   );
 };
 
-interface User {
-  _id: string;
-  firstname: string;
-  lastname: string;
-  // Add other fields if needed
-}
-
-interface Application {
-  _id: string;
-  jobId: Job;
-  userId: User;
-  status: string;
-  createdAt: string;
-}
-
+// ------------------------
+// ApplicationCard Component
+// ------------------------
 interface ApplicationProps {
   application: Application;
 }
 
 const ApplicationCard: React.FC<ApplicationProps> = ({ application }) => {
   const router = useRouter();
+
   return (
-    <div className="bg-gray-50 flex justify-between px-4 rounded-lg shadow-xl p-4 mb-4 w-full">
+    <div className="bg-gray-50 rounded-lg shadow p-4 flex flex-col sm:flex-row sm:justify-between sm:items-center">
       <div>
-        <h2 className="text-xl font-bold">{application.jobId.title}</h2>{" "}
-        <h2 className="text-base text-gray-600 mt-1 font-semibold">
-          Applied by{" "}
-          <span className="font-medium text-black">
+        <h3 className="text-lg font-semibold text-gray-800">
+          {application.jobId.title}
+        </h3>
+        <p className="text-sm text-gray-600 mt-1">
+          Applied by:{" "}
+          <span className="text-black font-medium">
             {application.userId.firstname} {application.userId.lastname}
-          </span>{" "}
-        </h2>
-        <h2 className="text-sm text-gray-600 font-semibold">
-          Applied on :{" "}
-          <span className="font-medium text-black">
+          </span>
+        </p>
+        <p className="text-sm text-gray-600">
+          Applied on:{" "}
+          <span className="text-black">
             {new Date(application.createdAt).toLocaleDateString("en-US", {
               year: "numeric",
               month: "long",
               day: "numeric",
             })}
-          </span>{" "}
-        </h2>
+          </span>
+        </p>
       </div>
-      <div className="flex items-center">
-        <button
-          onClick={() =>
-            router.push(
-              `/recruiter/applicants/details/${application.userId._id}`
-            )
-          }
-          className="px-4 py-2 rounded-lg bg-blue-600 cursor-pointer text-white font-semibold mt-4 hover:bg-blue-500 transition-all duration-100 ml-4"
-        >
-          View Details
-        </button>
-      </div>
+      <button
+        onClick={() =>
+          router.push(`/recruiter/applicants/details/${application.userId._id}`)
+        }
+        className="mt-4 sm:mt-0 sm:ml-4 px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-sm font-semibold transition"
+      >
+        View Details
+      </button>
     </div>
   );
 };
