@@ -3,29 +3,29 @@ import bgImage from "@/assets/hero/about.jpg";
 
 const ContactPage: React.FC = () => {
   return (
-    <div className="container mx-auto py-12 px-6">
-      <div className="flex flex-col md:flex-row justify-between gap-10">
+    <div className="container mx-auto py-12 px-4 sm:px-6 lg:px-8">
+      <div className="flex flex-col lg:flex-row justify-between gap-10">
         {/* Contact Form Section */}
-        <div className="w-full md:w-2/3 bg-white p-8 shadow-lg rounded-lg border border-gray-100">
+        <div className="w-full lg:w-2/3 bg-white p-6 sm:p-8 shadow-lg rounded-lg border border-gray-100">
           <h2 className="text-2xl font-semibold text-gray-900 mb-6">
             Get in Touch
           </h2>
           <form className="space-y-6">
             <div>
               <textarea
-                className="w-full h-40 p-4 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500 text-gray-700"
+                className="w-full h-40 p-4 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500 text-gray-700 resize-none"
                 placeholder="Enter Message"
               ></textarea>
             </div>
-            <div className="flex space-x-6">
+            <div className="flex flex-col sm:flex-row sm:space-x-6 space-y-4 sm:space-y-0">
               <input
                 type="text"
-                className="w-1/2 p-4 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500 text-gray-700"
+                className="w-full sm:w-1/2 p-4 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500 text-gray-700"
                 placeholder="Enter your name"
               />
               <input
                 type="email"
-                className="w-1/2 p-4 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500 text-gray-700"
+                className="w-full sm:w-1/2 p-4 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500 text-gray-700"
                 placeholder="Email"
               />
             </div>
@@ -46,10 +46,10 @@ const ContactPage: React.FC = () => {
         </div>
 
         {/* Contact Information Section */}
-        <div className="w-full md:w-1/3 text-gray-700 space-y-6">
+        <div className="w-full lg:w-1/3 text-gray-700 space-y-6">
           <div className="flex items-start">
             <svg
-              className="w-6 h-6 mr-4 text-blue-500"
+              className="w-6 h-6 mr-4 text-blue-500 shrink-0"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -75,7 +75,7 @@ const ContactPage: React.FC = () => {
           </div>
           <div className="flex items-start">
             <svg
-              className="w-6 h-6 mr-4 text-blue-500"
+              className="w-6 h-6 mr-4 text-blue-500 shrink-0"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -101,7 +101,7 @@ const ContactPage: React.FC = () => {
           </div>
           <div className="flex items-start">
             <svg
-              className="w-6 h-6 mr-4 text-blue-500"
+              className="w-6 h-6 mr-4 text-blue-500 shrink-0"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -131,7 +131,7 @@ const HomePage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <div
-        className="relative h-80 w-full overflow-hidden"
+        className="relative h-64 sm:h-72 md:h-80 lg:h-96 w-full overflow-hidden"
         style={{
           backgroundImage: `url(${bgImage.src})`,
           backgroundSize: "cover",
@@ -140,8 +140,8 @@ const HomePage: React.FC = () => {
         }}
       >
         <div className="absolute inset-0 bg-blue-900 opacity-50"></div>
-        <div className="relative flex items-center justify-center h-full text-white">
-          <h1 className="text-4xl font-bold z-10">About Us</h1>
+        <div className="relative flex items-center justify-center h-full text-white text-center px-4">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold z-10">About Us</h1>
         </div>
       </div>
 
