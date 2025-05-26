@@ -126,8 +126,9 @@ const Profile: React.FC = () => {
       toast.error("Failed to delete application");
     }
   };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-12 px-6">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-8 px-4 sm:px-6 md:px-12">
       <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden">
         {/* Header Section */}
         <div className="p-8 border-b border-gray-200 flex flex-col md:flex-row items-center justify-between gap-6">
@@ -136,10 +137,10 @@ const Profile: React.FC = () => {
               <FaUser />
             </div>
             <div>
-              <h1 className="text-2xl font-semibold text-gray-800">
+              <h1 className="text-2xl font-semibold text-gray-800 break-words">
                 {user?.name}
               </h1>
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-gray-500 break-words">
                 {user?.email || "No email available"}
               </p>
               <p className="text-sm text-gray-500">
@@ -155,7 +156,7 @@ const Profile: React.FC = () => {
         </div>
 
         {/* Applications */}
-        <section className="p-6 border-b border-gray-200">
+        <section className="p-6 border-b border-gray-200 overflow-x-auto">
           <h2 className="text-lg font-semibold text-gray-800 mb-4">
             My Applications
           </h2>
@@ -164,7 +165,7 @@ const Profile: React.FC = () => {
               You haven’t applied to any jobs yet.
             </p>
           ) : (
-            <div className="grid gap-4">
+            <div className="grid gap-4 overflow-x-auto">
               {user?.applications?.map((app, index) => (
                 <div
                   key={index}
@@ -207,7 +208,7 @@ const Profile: React.FC = () => {
       {/* Edit Profile Modal */}
       {isEditModalOpen && (
         <div className="fixed inset-0 bg-gray-200 bg-opacity-70 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-md sm:max-w-lg sm:mx-auto mx-2">
             <div className="flex justify-between items-center border-b p-4">
               <h2 className="text-xl font-semibold text-gray-800">
                 Edit Profile
@@ -219,7 +220,7 @@ const Profile: React.FC = () => {
                 <FaTimes className="w-5 h-5 cursor-pointer" />
               </button>
             </div>
-            <div className="p-6 space-y-4">
+            <div className="p-6 space-y-4 max-w-full overflow-x-auto">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Name
