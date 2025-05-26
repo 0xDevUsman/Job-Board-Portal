@@ -1,10 +1,10 @@
-# TalentGrid — Your Ultimate Job Board Portal
+# CareerFlow — Your Ultimate Job Board Portal
 
-Welcome to **TalentGrid**, an advanced and feature-rich job board portal designed to provide a seamless and efficient platform for connecting talent with opportunity.
+Welcome to **CareerFlow**, an advanced and feature-rich job board portal designed to provide a seamless and efficient platform for connecting talent with opportunity.
 
 ## 🌐 Live Demo
 
-🔗 **[TalentGrid](https://mytechhaven.vercel.app/)** - Explore the live version of the project.
+🔗 **[CareerFlow](https://careerflowapp.vercel.app/)** - Explore the live version of the project.
 
 ---
 
