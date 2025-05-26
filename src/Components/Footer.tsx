@@ -5,7 +5,7 @@ const Footer: React.FC = () => {
   return (
     <footer className="bg-[#010B1D] text-white py-20 px-4">
       {/* Main Footer Content */}
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
         {/* About Us Section */}
         <div>
           <h3 className="text-lg font-semibold mb-4">ABOUT US</h3>
@@ -19,18 +19,24 @@ const Footer: React.FC = () => {
         <div>
           <h3 className="text-lg font-semibold mb-4">CONTACT INFO</h3>
           <p className="text-sm text-gray-400 pb-1">Address: Delhi , India</p>
-          <p className="text-sm text-gray-400 pb-1">
-            Email: ua1226925@gmail.com
-          </p>
+          <p className="text-sm text-gray-400 pb-1">Email: ua1226925@gmail.com</p>
         </div>
 
         {/* Important Link Section */}
         <div>
           <h3 className="text-lg font-semibold mb-4">IMPORTANT LINK</h3>
-          <p className="text-sm text-gray-400 pb-1">Contact Us</p>
-          <p className="text-sm text-gray-400 pb-1">Testimonial</p>
-          <p className="text-sm text-gray-400 pb-1">Properties</p>
-          <p className="text-sm text-gray-400 pb-1">Support</p>
+          <p className="text-sm text-gray-400 pb-1 cursor-pointer hover:text-blue-500 transition">
+            Contact Us
+          </p>
+          <p className="text-sm text-gray-400 pb-1 cursor-pointer hover:text-blue-500 transition">
+            Testimonial
+          </p>
+          <p className="text-sm text-gray-400 pb-1 cursor-pointer hover:text-blue-500 transition">
+            Properties
+          </p>
+          <p className="text-sm text-gray-400 pb-1 cursor-pointer hover:text-blue-500 transition">
+            Support
+          </p>
         </div>
 
         {/* Newsletter Section */}
@@ -44,15 +50,15 @@ const Footer: React.FC = () => {
               type="email"
               placeholder="Email Address"
               className="w-full p-2 rounded-l-md text-black focus:outline-none"
-            />{" "}
+            />
           </div>
         </div>
       </div>
 
       {/* Bottom Footer Content */}
-      <div className="max-w-7xl mx-auto mt-10 flex flex-col justify-between items-center border-t border-gray-700 pt-4">
+      <div className="max-w-7xl mx-auto mt-10 flex flex-col md:flex-row justify-between items-center border-t border-gray-700 pt-4 gap-6">
         {/* Logo and Stats */}
-        <div className="flex items-center mb-10">
+        <div className="flex flex-col md:flex-row items-center gap-6 mb-6 md:mb-0">
           <div className="mr-4">
             {/* <Image
               src="/logo.png" // Replace with your logo path
@@ -60,7 +66,7 @@ const Footer: React.FC = () => {
               className="w-10 h-10"
             /> */}
           </div>
-          <div className="flex justify-between items-center gap-4 px-4 py-2">
+          <div className="flex flex-wrap justify-center items-center gap-4 px-4 py-2 text-center">
             <p className="text-base">5000+ Talented Hunter</p>
             <p className="text-base">451+ Talented Hunter</p>
             <p className="text-base">5668+ Talented Hunter</p>
@@ -68,15 +74,17 @@ const Footer: React.FC = () => {
         </div>
 
         {/* Copyright and Social Media */}
-        <div className="flex  items-center">
-          <p className="text-sm text-gray-400 mb-2 md:mb-0">
+        <div className="flex flex-col md:flex-row items-center gap-4 text-center md:text-left">
+          <p className="text-sm text-gray-400">
             Copyright ©2025 All rights reserved | This template is made with{" "}
             <span className="text-blue-600">♥</span> by 0xDevUsman
           </p>
-          <div className="flex space-x-4 ml-0 md:ml-4">
+          <div className="flex space-x-4">
             <Link
               href="https://github.com/0xDevUsman"
               className="text-gray-400 hover:text-blue-600"
+              target="_blank"
+              rel="noopener noreferrer"
             >
               <svg
                 className="w-5 h-5"
