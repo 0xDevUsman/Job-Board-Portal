@@ -14,9 +14,9 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 type RegisterProps = {
-  showOAuth?: boolean; // Show Google/GitHub buttons
-  showRoleInput?: boolean; // Show role dropdown/input
-  defaultRole: "employee" | "recruiter"; // fallback role if no input
+  showOAuth?: boolean;
+  showRoleInput?: boolean;
+  defaultRole: "employee" | "recruiter";
 };
 
 export default function Register({
@@ -41,7 +41,6 @@ export default function Register({
         password,
         role,
       });
-      console.log(data);
       if (data) {
         toast.success("Registration successful. Please login.");
         setTimeout(() => {
@@ -77,27 +76,27 @@ export default function Register({
   };
 
   return (
-    <div className="relative flex flex-col items-center justify-center min-h-screen bg-[#F5FAFF] px-4">
-      <div className="absolute hidden md:block md:opacity-70 lg:opacity-100 top-0 right-0">
-        <Image src={topRight} alt="" />
+    <div className="relative flex flex-col items-center justify-center min-h-screen bg-[#F5FAFF] px-4 py-8 sm:py-0">
+      <div className="absolute hidden sm:block opacity-70 lg:opacity-100 top-0 right-0">
+        <Image src={topRight} alt="" className="w-full h-auto max-w-xs lg:max-w-md" />
       </div>
       <div className="flex justify-center items-center gap-3 mb-6">
         <Image src={logo} alt="CareerFlow Logo" width={40} height={40} />
         <h1 className="font-bold text-2xl text-gray-900">CareerFlow</h1>
       </div>
-      <div className="bg-white shadow-xl rounded-lg p-8 w-full max-w-sm text-center">
+      <div className="bg-white shadow-xl rounded-lg p-6 sm:p-8 w-full max-w-xs sm:max-w-sm text-center">
         {showOAuth ? (
           <>
             <button
               onClick={googleSignIn}
-              className="w-full flex items-center justify-center gap-3 bg-white border border-gray-300 shadow-sm text-gray-700 font-medium px-4 py-3 rounded-md transition focus:ring-1 focus:ring-blue-500 hover:border-blue-500 duration-150"
+              className="w-full flex items-center justify-center gap-3 bg-white border border-gray-300 shadow-sm text-gray-700 font-medium px-4 py-2 sm:py-3 rounded-md transition focus:ring-1 focus:ring-blue-500 hover:border-blue-500 duration-150 text-sm sm:text-base"
             >
               <Image src={google} alt="Google Logo" width={20} height={20} />
               Sign in with Google
             </button>
             <button
               onClick={githubSignIn}
-              className="w-full flex items-center justify-center gap-3 bg-white border border-gray-300 shadow-sm text-gray-700 font-medium px-4 py-3 rounded-md transition focus:ring-1 focus:ring-blue-500 hover:border-blue-500 duration-150 mt-4"
+              className="w-full flex items-center justify-center gap-3 bg-white border border-gray-300 shadow-sm text-gray-700 font-medium px-4 py-2 sm:py-3 rounded-md transition focus:ring-1 focus:ring-blue-500 hover:border-blue-500 duration-150 mt-4 text-sm sm:text-base"
             >
               <Image src={github} alt="Github Logo" width={20} height={20} />
               Sign in with Github
@@ -109,16 +108,14 @@ export default function Register({
             </div>
           </>
         ) : (
-          <>
-            <h1 className="text-2xl font-bold text-blue-500 tracking-tight mb-4">
-              Register Recruiters !
-            </h1>
-          </>
+          <h1 className="text-xl sm:text-2xl font-bold text-blue-500 tracking-tight mb-4">
+            Register Recruiters!
+          </h1>
         )}
         <form onSubmit={submitHandler} className="flex flex-col gap-1 mt-3">
           <label
             htmlFor="first-name"
-            className="text-gray-700 font-medium text-start mt-3"
+            className="text-gray-700 font-medium text-start mt-3 text-sm sm:text-base"
           >
             <span className="text-red-500">*</span> First name
           </label>
@@ -128,12 +125,12 @@ export default function Register({
             placeholder="John"
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition"
+            className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition text-sm sm:text-base"
           />
 
           <label
             htmlFor="last-name"
-            className="text-gray-700 font-medium text-start mt-3"
+            className="text-gray-700 font-medium text-start mt-3 text-sm sm:text-base"
           >
             <span className="text-red-500">*</span> Last name
           </label>
@@ -143,12 +140,12 @@ export default function Register({
             placeholder="Doe"
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition"
+            className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition text-sm sm:text-base"
           />
 
           <label
             htmlFor="email"
-            className="text-gray-700 font-medium text-start mt-3"
+            className="text-gray-700 font-medium text-start mt-3 text-sm sm:text-base"
           >
             <span className="text-red-500">*</span> Email
           </label>
@@ -158,12 +155,12 @@ export default function Register({
             placeholder="example@gmail.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition"
+            className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition text-sm sm:text-base"
           />
 
           <label
             htmlFor="password"
-            className="text-gray-700 font-medium text-start mt-3"
+            className="text-gray-700 font-medium text-start mt-3 text-sm sm:text-base"
           >
             <span className="text-red-500">*</span> Password
           </label>
@@ -173,14 +170,14 @@ export default function Register({
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition"
+            className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition text-sm sm:text-base"
           />
 
           {showRoleInput && (
             <>
               <label
                 htmlFor="role"
-                className="text-gray-700 font-medium text-start mt-3"
+                className="text-gray-700 font-medium text-start mt-3 text-sm sm:text-base"
               >
                 <span className="text-red-500">*</span> Role
               </label>
@@ -189,7 +186,7 @@ export default function Register({
                 onChange={(e) =>
                   setRole(e.target.value as "employee" | "recruiter")
                 }
-                className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 text-sm sm:text-base"
               >
                 <option value="employee">Employee</option>
                 <option value="recruiter">Recruiter</option>
@@ -197,23 +194,23 @@ export default function Register({
             </>
           )}
 
-          <h1 className="text-sm text-gray-500 mt-3 text-start">
+          <div className="text-sm text-gray-500 mt-3 text-start">
             <Link href="/login">
               Already have an account?{" "}
               <span className="text-blue-500 hover:underline">Login</span>
             </Link>
-          </h1>
+          </div>
 
           <button
             type="submit"
-            className="w-full cursor-pointer bg-blue-500 text-white font-medium py-3 rounded-md shadow-sm transition focus:ring-1 focus:ring-blue-500 hover:bg-blue-600 duration-150 mt-6"
+            className="w-full cursor-pointer bg-blue-500 text-white font-medium py-2 sm:py-3 rounded-md shadow-sm transition focus:ring-1 focus:ring-blue-500 hover:bg-blue-600 duration-150 mt-4 text-sm sm:text-base"
           >
             Register
           </button>
         </form>
       </div>
-      <div className="absolute hidden md:block md:opacity-70 lg:opacity-100 bottom-0 left-0">
-        <Image src={bottomLeft} alt="" />
+      <div className="absolute hidden sm:block opacity-70 lg:opacity-100 bottom-0 left-0">
+        <Image src={bottomLeft} alt="" className="w-full h-auto max-w-xs lg:max-w-md" />
       </div>
     </div>
   );

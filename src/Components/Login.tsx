@@ -65,25 +65,25 @@ export default function Login() {
     }
   };
   return (
-    <div className="relative flex flex-col items-center justify-center min-h-screen bg-[#F5FAFF] px-4">
-      <div className="absolute  hidden md:block md:opacity-70 lg:opacity-100 lg-opacity-85  top-0 right-0">
-        <Image src={topRight} alt="" />
+    <div className="relative flex flex-col items-center justify-center min-h-screen bg-[#F5FAFF] px-4 py-8 sm:py-0">
+      <div className="absolute hidden sm:block opacity-70 lg:opacity-100 top-0 right-0">
+        <Image src={topRight} alt="" className="w-full h-auto max-w-xs lg:max-w-md" />
       </div>
       <div className="flex justify-center items-center gap-3 mb-6">
         <Image src={logo} alt="CareerFlow Logo" width={40} height={40} />
         <h1 className="font-bold text-2xl text-gray-900">CareerFlow</h1>
       </div>
-      <div className="bg-white shadow-xl rounded-lg p-8 w-full max-w-sm text-center">
+      <div className="bg-white shadow-xl rounded-lg p-6 sm:p-8 w-full max-w-xs sm:max-w-sm text-center">
         <button
           onClick={() => googleSignIn()}
-          className="w-full flex items-center justify-center gap-3 bg-white border border-gray-300 shadow-sm text-gray-700 font-medium px-4 py-3 rounded-md transition focus:ring-1 focus:ring-blue-500 hover:cursor-pointer hover:border-blue-500 duration-150"
+          className="w-full flex items-center justify-center gap-3 bg-white border border-gray-300 shadow-sm text-gray-700 font-medium px-4 py-2 sm:py-3 rounded-md transition focus:ring-1 focus:ring-blue-500 hover:cursor-pointer hover:border-blue-500 duration-150 text-sm sm:text-base"
         >
           <Image src={google} alt="Google Logo" width={20} height={20} />
           Sign in with Google
         </button>
         <button
           onClick={() => githubSignIn()}
-          className="w-full flex items-center justify-center gap-3 bg-white border border-gray-300 shadow-sm text-gray-700 font-medium px-4 py-3 rounded-md transition focus:ring-1 focus:ring-blue-500 hover:cursor-pointer hover:border-blue-500 duration-150 mt-4"
+          className="w-full flex items-center justify-center gap-3 bg-white border border-gray-300 shadow-sm text-gray-700 font-medium px-4 py-2 sm:py-3 rounded-md transition focus:ring-1 focus:ring-blue-500 hover:cursor-pointer hover:border-blue-500 duration-150 mt-4 text-sm sm:text-base"
         >
           <Image src={github} alt="Google Logo" width={20} height={20} />
           Sign in with Github
@@ -96,7 +96,7 @@ export default function Login() {
         <form onSubmit={submitHandler} className="flex flex-col gap-1 mt-3">
           <label
             htmlFor="email"
-            className="text-gray-700 font-medium text-start mt-3"
+            className="text-gray-700 font-medium text-start mt-3 text-sm sm:text-base"
           >
             <span className="text-red-500">*</span> Email
           </label>
@@ -106,11 +106,11 @@ export default function Login() {
             placeholder="example@gmail.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition"
+            className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition text-sm sm:text-base"
           />
           <label
             htmlFor="password"
-            className="text-gray-700 font-medium text-start mt-3"
+            className="text-gray-700 font-medium text-start mt-3 text-sm sm:text-base"
           >
             <span className="text-red-500">*</span> Password
           </label>
@@ -120,24 +120,24 @@ export default function Login() {
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition"
+            className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition text-sm sm:text-base"
           />
-          <h1 className="text-sm text-gray-500 mt-3 text-start">
+          <div className="text-sm text-gray-500 mt-3 text-start">
             <Link href="/register" className="">
               Don&apos;t have an account?{" "}
               <span className="text-blue-500 hover:underline">Register</span>
             </Link>
-            <button
-              type="submit"
-              className="w-full bg-blue-500 text-white font-medium py-3 rounded-md shadow-sm transition focus:ring-1 focus:ring-blue-500 hover:cursor-pointer hover:bg-blue-500 duration-150 mt-6"
-            >
-              Login
-            </button>
-          </h1>
+          </div>
+          <button
+            type="submit"
+            className="w-full bg-blue-500 text-white font-medium py-2 sm:py-3 rounded-md shadow-sm transition focus:ring-1 focus:ring-blue-500 hover:cursor-pointer hover:bg-blue-600 duration-150 mt-4 text-sm sm:text-base"
+          >
+            Login
+          </button>
         </form>
       </div>
-      <div className="absolute hidden md:block md:opacity-70 lg:opacity-100 lg-opacity-85  bottom-0 left-0">
-        <Image src={bottomLeft} alt="" />
+      <div className="absolute hidden sm:block opacity-70 lg:opacity-100 bottom-0 left-0">
+        <Image src={bottomLeft} alt="" className="w-full h-auto max-w-xs lg:max-w-md" />
       </div>
     </div>
   );
