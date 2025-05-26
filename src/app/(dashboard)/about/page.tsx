@@ -8,7 +8,7 @@ const AboutBanner: React.FC = () => {
   return (
     <>
       <div
-        className="relative h-80 w-full overflow-hidden"
+        className="relative h-64 sm:h-80 w-full overflow-hidden"
         style={{
           backgroundImage: `url(${bgImage.src})`,
           backgroundSize: "cover",
@@ -20,7 +20,7 @@ const AboutBanner: React.FC = () => {
         <div className="absolute inset-0 bg-blue-900 opacity-50"></div>
         {/* Text Overlay */}
         <div className="relative flex items-center justify-center h-full text-white">
-          <h1 className="text-4xl font-bold z-10">About Us</h1>
+          <h1 className="text-3xl sm:text-4xl font-bold z-10">About Us</h1>
         </div>
       </div>
       <WhatWeAreDoing />

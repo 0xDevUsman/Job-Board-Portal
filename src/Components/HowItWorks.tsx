@@ -1,5 +1,5 @@
 import React from "react";
-import { FaSearch, FaUserCheck, FaBriefcase } from "react-icons/fa"; // Example icons from react-icons
+import { FaSearch, FaUserCheck, FaBriefcase } from "react-icons/fa";
 
 const HowItWorks = () => {
   const steps = [
@@ -14,21 +14,21 @@ const HowItWorks = () => {
       number: "2.",
       title: "Apply for job",
       description:
-        "Once you find a suitable job, submit your application by uploading your resume and filling out necessary details. Some positions may require a cover letter or additional information.",
+        "Once you find a suitable job, submit your application by uploading your resume and filling out necessary details.",
       icon: FaUserCheck,
     },
     {
       number: "3.",
       title: "Get your job",
       description:
-        "If your application is shortlisted, the employer may contact you for an interview. Successfully passing the interview and meeting the job requirements will lead to a job offer.",
+        "If your application is shortlisted, the employer may contact you for an interview. Successfully passing the interview leads to a job offer.",
       icon: FaBriefcase,
     },
   ];
 
   return (
     <div
-      className="mx-auto px-4 py-10 h-[600px]"
+      className="mx-auto px-4 sm:px-6 py-10 sm:py-12 h-auto sm:h-[600px]"
       style={{
         backgroundImage:
           "url('https://themewagon.github.io/jobfinderportal/assets/img/gallery/how-applybg.png')",
@@ -36,36 +36,37 @@ const HowItWorks = () => {
         backgroundPosition: "center",
       }}
     >
-      {/* Heading Section */}
-      <h1 className="text-xl text-center text-blue-500 mt-10">Apply process</h1>
-      <h1 className="text-5xl text-white font-semibold text-center mt-4">
-        How it works
-      </h1>
+      <div className="max-w-7xl mx-auto">
+        <h1 className="text-lg sm:text-xl text-center text-blue-500 mt-6 sm:mt-10">
+          Apply process
+        </h1>
+        <h1 className="text-3xl sm:text-4xl md:text-5xl text-white font-semibold text-center mt-3 sm:mt-4">
+          How it works
+        </h1>
 
-      {/* Cards Section */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-7xl mx-auto my-12 ">
-        {steps.map((step, index) => {
-          const Icon = step.icon; // Capitalize for JSX rendering
-          return (
-            <div
-              key={index}
-              className="bg-[#26317F] bg-opacity-80 p-6 rounded-lg text-center"
-            >
-              {/* Icon */}
-              <div className="flex justify-center mb-4">
-                <Icon className="text-white w-12 h-12" />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 my-8 sm:my-12">
+          {steps.map((step, index) => {
+            const Icon = step.icon;
+            return (
+              <div
+                key={index}
+                className="bg-[#26317F] bg-opacity-80 p-4 sm:p-6 rounded-lg text-center"
+              >
+                <div className="flex justify-center mb-3 sm:mb-4">
+                  <Icon className="text-white w-8 h-8 sm:w-12 sm:h-12" />
+                </div>
+
+                <h3 className="text-xl sm:text-2xl text-white font-semibold">
+                  {step.number} {step.title}
+                </h3>
+
+                <p className="text-[#A5A0C0] mt-2 text-sm sm:text-base">
+                  {step.description}
+                </p>
               </div>
-
-              {/* Number and Title */}
-              <h3 className="text-2xl text-white font-semibold">
-                {step.number} {step.title}
-              </h3>
-
-              {/* Description */}
-              <p className="text-[#A5A0C0] mt-2">{step.description}</p>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
     </div>
   );
