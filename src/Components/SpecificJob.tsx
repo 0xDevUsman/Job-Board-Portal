@@ -88,7 +88,6 @@ const SpecificJob: React.FC = () => {
   }
 
   const isJobPoster = job?.postedBy && userId === job.postedBy._id;
-
   const isRecruiter = userRole === "recruiter";
   const isEmployee = userRole === "employee";
   const postedDate = new Date(job.createdAt).toLocaleDateString("en-US", {
@@ -103,7 +102,7 @@ const SpecificJob: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-md overflow-hidden">
-        <div className="p-8">
+        <div className="p-6 sm:p-8">
           {/* Job Header */}
           <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4 mb-6">
             <div>
@@ -113,14 +112,10 @@ const SpecificJob: React.FC = () => {
               <div className="text-lg text-gray-600 mb-1">{job.company}</div>
               <div className="text-gray-500">{job.location}</div>
             </div>
-            <div className="text-right">
-              <div className="text-sm text-gray-500">Posted: {postedDate}</div>
-              <div className="text-sm text-gray-500">
-                Job Type: {job.jobType}
-              </div>
-              <div className="text-sm text-gray-500">
-                Posted by: {job?.postedBy?.firstname}
-              </div>
+            <div className="text-left md:text-right text-sm text-gray-500 space-y-1">
+              <div>Posted: {postedDate}</div>
+              <div>Job Type: {job.jobType}</div>
+              <div>Posted by: {job?.postedBy?.firstname}</div>
             </div>
           </div>
 
@@ -136,9 +131,9 @@ const SpecificJob: React.FC = () => {
             <h2 className="text-xl font-semibold text-gray-900 mb-3">
               Job Description
             </h2>
-            <div className="text-gray-700 whitespace-pre-line">
+            <p className="text-gray-700 whitespace-pre-line">
               {job.description}
-            </div>
+            </p>
           </div>
 
           {/* Requirements */}
@@ -146,14 +141,11 @@ const SpecificJob: React.FC = () => {
             <h2 className="text-xl font-semibold text-gray-900 mb-3">
               Requirements
             </h2>
-            <div className="space-y-2">
+            <ul className="space-y-2 list-disc list-inside text-gray-700">
               {job.requirements.map((requirement, index) => (
-                <div key={index} className="flex items-start">
-                  <div className="mr-2">•</div>
-                  <div className="text-gray-700">{requirement}</div>
-                </div>
+                <li key={index}>{requirement}</li>
               ))}
-            </div>
+            </ul>
           </div>
 
           {/* About Company */}
@@ -161,15 +153,15 @@ const SpecificJob: React.FC = () => {
             <h2 className="text-xl font-semibold text-gray-900 mb-3">
               About {job.company}
             </h2>
-            <div className="text-gray-700">
+            <p className="text-gray-700">
               {job.company} is a leading company in their industry, committed to
               innovation and excellence. They provide opportunities for growth
               and skill enhancement.
-            </div>
+            </p>
           </div>
 
           {/* Action Buttons */}
-          <div className="mt-10 border-t border-gray-200 pt-6">
+          <div className="mt-10 border-t border-gray-200 pt-6 flex flex-col sm:flex-row sm:items-center sm:justify-start gap-4">
             {showApplyButton && (
               <Link href={`/apply/${jobId}`} passHref>
                 <button className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition duration-200">
@@ -180,7 +172,7 @@ const SpecificJob: React.FC = () => {
 
             {showViewApplicationsButton && (
               <Link href={`/recruiter/applicants/${jobId}`} passHref>
-                <button className="w-full cursor-pointer sm:w-auto bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-6 rounded-lg transition duration-200">
+                <button className="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-6 rounded-lg transition duration-200">
                   View Applications
                 </button>
               </Link>

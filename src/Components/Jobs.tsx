@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import axios from "axios";
@@ -37,7 +38,6 @@ const FilterComponent = ({
   const [salary, setSalary] = useState(0);
   const [sortBy, setSortBy] = useState("relevance");
 
-  // Debounce the filter values
   const debouncedProfile = useDebounce(profile, 500);
   const debouncedLocation = useDebounce(location, 500);
   const debouncedRemote = useDebounce(remote, 500);
@@ -52,7 +52,6 @@ const FilterComponent = ({
     setSortBy("relevance");
   };
 
-  // Only call onFilterChange when debounced values change
   useEffect(() => {
     const newFilters = {
       profile: debouncedProfile,
@@ -61,7 +60,6 @@ const FilterComponent = ({
       salary: debouncedSalary,
       sortBy: debouncedSortBy,
     };
-    console.log("FilterComponent: Applying filters:", newFilters);
     onFilterChange(newFilters);
   }, [
     debouncedProfile,
@@ -73,7 +71,7 @@ const FilterComponent = ({
   ]);
 
   return (
-    <div className="max-w-md p-6 bg-white shadow-md rounded-lg">
+    <div className="w-full md:max-w-md p-4 md:p-6 bg-white shadow-md rounded-lg">
       <div className="flex gap-3 items-center mb-4">
         <h2 className="text-lg font-semibold">Filters</h2>
         <svg
@@ -82,52 +80,41 @@ const FilterComponent = ({
           stroke="currentColor"
           viewBox="0 0 24 24"
         >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M19 9l-7 7-7-7"
-          />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
         </svg>
       </div>
 
       <div className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Profile
-          </label>
+          <label className="block text-sm font-medium text-gray-700">Profile</label>
           <input
             type="text"
             value={profile}
             onChange={(e) => setProfile(e.target.value)}
             placeholder="e.g. Marketing"
-            className="mt-1 block w-full p-2 border-gray-300 rounded-md shadow-sm sm:text-sm"
+            className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm sm:text-sm"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Location
-          </label>
+          <label className="block text-sm font-medium text-gray-700">Location</label>
           <input
             type="text"
             value={location}
             onChange={(e) => setLocation(e.target.value)}
             placeholder="e.g. Delhi"
-            className="mt-1 block w-full p-2 border-gray-300 rounded-md shadow-sm sm:text-sm"
+            className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm sm:text-sm"
           />
         </div>
 
         <div className="space-y-2">
-          <label className="block text-sm font-medium text-gray-700">
-            Options
-          </label>
+          <label className="block text-sm font-medium text-gray-700">Options</label>
           <div className="flex items-center">
             <input
               type="checkbox"
               checked={remote}
               onChange={(e) => setRemote(e.target.checked)}
-              className="h-4 w-4 p-2 text-blue-600 border-gray-300 rounded"
+              className="h-4 w-4 text-blue-600 border-gray-300 rounded"
             />
             <span className="ml-2 text-sm text-gray-700">Remote (Only)</span>
           </div>
@@ -157,13 +144,11 @@ const FilterComponent = ({
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Sort by
-          </label>
+          <label className="block text-sm font-medium text-gray-700">Sort by</label>
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="mt-1 block w-full p-2 border-gray-300 rounded-md shadow-sm sm:text-sm"
+            className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm sm:text-sm"
           >
             <option value="relevance">Relevance</option>
             <option value="date">Date</option>
@@ -173,7 +158,7 @@ const FilterComponent = ({
 
         <button
           onClick={handleClearAll}
-          className="w-full cursor-pointer mt-4 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 focus:outline-none"
+          className="w-full mt-4 py-2 px-4 rounded-md text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100"
         >
           Clear all
         </button>
@@ -215,12 +200,7 @@ export const JobListing = ({
         stroke="currentColor"
         viewBox="0 0 24 24"
       >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="2"
-          d="M5 13l4 4L19 7"
-        />
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
       </svg>
     </div>
   </div>
@@ -236,7 +216,7 @@ const Jobs = () => {
     remote: boolean;
     salary: number;
     sortBy: string;
-  } | null>(null); // Track last applied filters
+  } | null>(null);
   const jobsPerPage = 5;
 
   const indexOfLastJob = currentPage * jobsPerPage;
@@ -245,7 +225,7 @@ const Jobs = () => {
   const totalPages = Math.ceil(filteredJobs.length / jobsPerPage);
   const { data: session } = useSession();
   const role = session?.user?.role;
-  // Fetch jobs from the API
+
   const getJob = async () => {
     try {
       const res = await axios.get("/api/job");
@@ -256,12 +236,10 @@ const Jobs = () => {
     }
   };
 
-  // Run once when component mounts
   useEffect(() => {
     getJob();
   }, []);
 
-  // Handle filter changes
   const handleFilterChange = useCallback(
     (filters: {
       profile: string;
@@ -270,7 +248,6 @@ const Jobs = () => {
       salary: number;
       sortBy: string;
     }) => {
-      // Check if filters have changed
       if (
         lastFilters &&
         lastFilters.profile === filters.profile &&
@@ -279,16 +256,13 @@ const Jobs = () => {
         lastFilters.salary === filters.salary &&
         lastFilters.sortBy === filters.sortBy
       ) {
-        console.log("No filter changes, skipping update");
-        return; // Skip if filters haven't changed
+        return;
       }
 
-      console.log("Applying filters:", filters);
-      setLastFilters(filters); // Update last applied filters
+      setLastFilters(filters);
 
       let filtered = [...jobListings];
 
-      // Apply filters
       if (filters.profile) {
         filtered = filtered.filter((job) =>
           job.title.toLowerCase().includes(filters.profile.toLowerCase())
@@ -332,35 +306,26 @@ const Jobs = () => {
           return salaryB - salaryA;
         });
       } else if (filters.sortBy === "date") {
-        // Add date sorting logic if applicable (e.g., based on timeAgo or a date field)
         filtered.sort((a, b) => {
-          // Placeholder: Replace with actual date comparison
           return new Date(b.timeAgo).getTime() - new Date(a.timeAgo).getTime();
         });
       }
 
       setFilteredJobs(filtered);
-
-      // Reset to page 1 only if filters changed
       if (currentPage !== 1) {
-        console.log("Resetting to page 1 due to filter change");
         setCurrentPage(1);
       }
     },
     [jobListings, lastFilters, currentPage]
   );
 
-  // Debug page changes
   const handlePageChange = (page: number) => {
-    console.log("Changing to page:", page);
     setCurrentPage(page);
   };
 
   const onClickJob = async (_id: string) => {
     const res = await axios.get(`/api/job/${_id}`);
     const job = res.data.job;
-    console.log(job);
-    // Navigate to job detail page
     if (role === "recruiter") {
       window.location.href = `/recruiter/jobs/${_id}`;
     } else {
@@ -369,36 +334,23 @@ const Jobs = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto p-6">
-      <div className="w-full flex justify-center items-start mt-10">
-        <div className="w-1/3 p-4">
+    <div className="max-w-7xl mx-auto p-4 md:p-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
+        <div className="w-full">
           <FilterComponent onFilterChange={handleFilterChange} />
         </div>
-        <div className="w-2/3 p-4">
+        <div className="md:col-span-2 w-full">
           {currentJobs.map((job) => (
-            <div
-              key={job._id}
-              className="mb-4"
-              onClick={() => onClickJob(job._id)}
-            >
-              <JobListing
-                key={job._id}
-                _id={job._id}
-                title={job.title}
-                company={job.company}
-                location={job.location}
-                experience={job.experience}
-                salary={job.salary}
-                timeAgo={job.timeAgo}
-              />
+            <div key={job._id} className="mb-4" onClick={() => onClickJob(job._id)}>
+              <JobListing {...job} />
             </div>
           ))}
-          <div className="flex justify-center mt-6 space-x-2">
+          <div className="flex flex-wrap justify-center mt-6 gap-2">
             <button
               className={`px-4 py-2 rounded-md ${
                 currentPage <= 1
                   ? "bg-gray-200 text-gray-700 cursor-not-allowed"
-                  : "bg-blue-500 text-white cursor-pointer"
+                  : "bg-blue-500 text-white"
               }`}
               disabled={currentPage === 1}
               onClick={() => handlePageChange(currentPage - 1)}
@@ -409,7 +361,7 @@ const Jobs = () => {
               <button
                 key={i}
                 onClick={() => handlePageChange(i + 1)}
-                className={`px-4 py-2 rounded-md cursor-pointer ${
+                className={`px-4 py-2 rounded-md ${
                   currentPage === i + 1
                     ? "bg-blue-500 text-white"
                     : "bg-gray-200 text-gray-700"
@@ -422,7 +374,7 @@ const Jobs = () => {
               className={`px-4 py-2 rounded-md ${
                 currentPage === totalPages
                   ? "bg-gray-200 text-gray-700 cursor-not-allowed"
-                  : "bg-blue-500 text-white cursor-pointer"
+                  : "bg-blue-500 text-white"
               }`}
               disabled={currentPage === totalPages}
               onClick={() => handlePageChange(currentPage + 1)}
