@@ -7,15 +7,15 @@ import axios from "axios";
 import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
 
-// Interfaces
-interface JobListing {
+interface JobListingProps {
   _id: string;
   title: string;
   company: string;
   location: string;
-  experience: string;
+  experience?: string;
   salary: number;
   timeAgo: string;
+  onJobDeleted?: (id: string) => void;
 }
 
 const RecruiterJob = () => {
@@ -23,7 +23,7 @@ const RecruiterJob = () => {
   const userId = session?.user?.id;
 
   const [loading, setLoading] = useState(true);
-  const [jobListings, setJobListings] = useState<JobListing[]>([]);
+  const [jobListings, setJobListings] = useState<JobListingProps[]>([]);
 
   const fetchJobs = useCallback(async () => {
     if (!userId) return;
@@ -33,7 +33,6 @@ const RecruiterJob = () => {
       const response = await axios.get("/api/recruiter/jobs", {
         params: { userId },
       });
-
       setJobListings(response.data.jobs);
     } catch (error) {
       console.error("Error fetching jobs:", error);
@@ -48,14 +47,13 @@ const RecruiterJob = () => {
   }, [fetchJobs]);
 
   const handleJobDeleted = (deletedJobId: string) => {
-    const updatedJobs = jobListings.filter((job) => job._id !== deletedJobId);
-    setJobListings(updatedJobs);
+    setJobListings((prev) => prev.filter((job) => job._id !== deletedJobId));
   };
 
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <div className="text-xl">Loading jobs...</div>
+        <div className="text-xl font-semibold">Loading jobs...</div>
       </div>
     );
   }
@@ -66,13 +64,15 @@ const RecruiterJob = () => {
       <main className="max-w-6xl mx-auto p-6">
         <section className="w-full">
           {jobListings.length === 0 ? (
-            <div className="text-center py-10">
-              <p className="text-gray-500">You haven’t posted any jobs yet.</p>
+            <div className="text-center py-20">
+              <p className="text-gray-500 text-lg">
+                You haven’t posted any jobs yet.
+              </p>
             </div>
           ) : (
-            <ul className="space-y-4">
+            <ul className="space-y-5">
               {jobListings.map((job) => (
-                <li key={job._id} onClick={() => console.log("Job clicked")}>
+                <li key={job._id}>
                   <JobListing {...job} onJobDeleted={handleJobDeleted} />
                 </li>
               ))}
@@ -84,7 +84,7 @@ const RecruiterJob = () => {
   );
 };
 
-const JobListing = ({
+const JobListing: React.FC<JobListingProps> = ({
   _id,
   title,
   company,
@@ -92,7 +92,7 @@ const JobListing = ({
   salary,
   timeAgo,
   onJobDeleted,
-}: JobListing & { onJobDeleted?: (id: string) => void }) => {
+}) => {
   const { data: session } = useSession();
   const userId = session?.user?.id;
 
@@ -115,29 +115,30 @@ const JobListing = ({
   };
 
   return (
-    <div className="rounded-lg p-4 mb-4 shadow-md bg-white hover:shadow-lg transition duration-200 cursor-pointer">
-      <div className="flex justify-between items-center">
-        <div>
-          <h3 className="text-lg font-semibold">{title}</h3>
-          <p className="text-gray-600">
-            {company}
-            <span className="text-blue-600 ml-2">Actively hiring</span>
-          </p>
-          <div className="text-sm text-gray-500">
-            <span>{location}</span> | <span>₹ {salary.toLocaleString()}</span> |{" "}
-            <span>{timeAgo}</span>
-          </div>
-        </div>
-        <div className="text-red-500 cursor-pointer">
-          <MdDelete
-            onClick={(e) => {
-              e.stopPropagation();
-              deleteJob(_id);
-            }}
-            className="w-6 h-6"
-          />
-        </div>
+    <div className="rounded-lg p-5 shadow-md bg-white hover:shadow-lg transition duration-200 cursor-pointer flex justify-between items-center">
+      <div>
+        <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
+        <p className="text-gray-600 mt-1">
+          {company}{" "}
+          <span className="text-blue-600 font-medium ml-2">
+            Actively hiring
+          </span>
+        </p>
+        <p className="text-sm text-gray-500 mt-1">
+          <span>{location}</span> | <span>₹{salary.toLocaleString()}</span> |{" "}
+          <span>{timeAgo}</span>
+        </p>
       </div>
+      <button
+        aria-label="Delete job"
+        onClick={(e) => {
+          e.stopPropagation();
+          deleteJob(_id);
+        }}
+        className="text-red-500 hover:text-red-700 transition"
+      >
+        <MdDelete className="w-6 h-6" />
+      </button>
     </div>
   );
 };

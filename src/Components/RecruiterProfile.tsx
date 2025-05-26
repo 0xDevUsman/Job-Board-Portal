@@ -69,7 +69,6 @@ const RecruiterProfile = () => {
       });
       const jobs = response.data.jobs;
       setJobs(jobs);
-      console.log("Jobs:", jobs);
     } catch (error) {
       console.error("Error fetching jobs:", error);
     }
@@ -90,7 +89,6 @@ const RecruiterProfile = () => {
         },
       });
       if (response.status === 200) {
-        console.log("Job deleted successfully");
         toast.success("Job deleted successfully");
         getJob();
       } else {
@@ -101,20 +99,12 @@ const RecruiterProfile = () => {
     }
   };
 
-  const handleEditProfile = () => {
-    setIsEditModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsEditModalOpen(false);
-  };
+  const handleEditProfile = () => setIsEditModalOpen(true);
+  const handleCloseModal = () => setIsEditModalOpen(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setEditedUser((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setEditedUser((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSaveChanges = async () => {
@@ -132,15 +122,12 @@ const RecruiterProfile = () => {
 
       if (response.data.success) {
         toast.success(response.data.message);
-
-        // Update local state
         setUser((prev) => ({
           ...prev,
           name: response.data.user.name,
           email: response.data.user.email,
         }));
 
-        // Force update the session with the complete user data
         await update({
           ...session,
           user: {
@@ -163,11 +150,10 @@ const RecruiterProfile = () => {
   return (
     <div className="relative">
       <RecruiterNavbar />
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-12 px-6">
-        <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden">
-          {/* Header Section */}
-          <div className="p-8 border-b border-gray-200 flex flex-col md:flex-row items-center justify-between gap-6">
-            {/* Left: User Info */}
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-10 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-5xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden">
+          {/* Header */}
+          <div className="p-6 sm:p-8 border-b border-gray-200 flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-5">
               <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center text-gray-500 text-3xl">
                 <FaUser />
@@ -185,14 +171,14 @@ const RecruiterProfile = () => {
               </div>
             </div>
             <button onClick={handleEditProfile}>
-              <span className="text-sm border cursor-pointer hover:opacity-85 bg-blue-500 px-3 py-2 text-white rounded-lg font-bold">
+              <span className="text-sm border cursor-pointer hover:opacity-85 bg-blue-500 px-4 py-2 text-white rounded-lg font-bold">
                 Edit Profile
               </span>
             </button>
           </div>
 
-          {/* Posted Jobs */}
-          <section className="p-6 border-b border-gray-200">
+          {/* Jobs Section */}
+          <section className="p-4 sm:p-6 border-b border-gray-200">
             <h2 className="text-lg font-semibold text-gray-800 mb-4">
               My Jobs
             </h2>
@@ -201,11 +187,11 @@ const RecruiterProfile = () => {
                 You haven&apos;t posted any jobs yet.
               </p>
             ) : (
-              <div className="grid gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {jobs.map((app, index) => (
                   <div
                     key={index}
-                    className="flex cursor-pointer justify-between items-center bg-gray-50 p-3 rounded-lg shadow-sm hover:shadow-md transition"
+                    className="flex justify-between items-start bg-gray-50 p-4 rounded-lg shadow-sm hover:shadow-md transition"
                   >
                     <div>
                       <h3 className="text-base font-medium text-gray-800">
@@ -236,9 +222,9 @@ const RecruiterProfile = () => {
         </div>
       </div>
 
-      {/* Edit Profile Modal */}
+      {/* Modal */}
       {isEditModalOpen && (
-        <div className="fixed inset-0 bg-gray-200 bg-opacity-70 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
             <div className="flex justify-between items-center border-b p-4">
               <h2 className="text-xl font-semibold text-gray-800">
@@ -248,7 +234,7 @@ const RecruiterProfile = () => {
                 onClick={handleCloseModal}
                 className="text-gray-500 hover:text-gray-700"
               >
-                <FaTimes className="w-5 h-5 cursor-pointer" />
+                <FaTimes className="w-5 h-5" />
               </button>
             </div>
             <div className="p-6 space-y-4">
@@ -286,7 +272,7 @@ const RecruiterProfile = () => {
               </button>
               <button
                 onClick={handleSaveChanges}
-                className="px-4 cursor-pointer py-2 text-sm font-medium text-white bg-blue-500 rounded-md hover:bg-blue-600"
+                className="px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded-md hover:bg-blue-600"
               >
                 Save Changes
               </button>

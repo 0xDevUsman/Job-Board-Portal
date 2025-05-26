@@ -22,7 +22,7 @@ const RecentJobs: React.FC = () => {
     const fetchJobs = async () => {
       try {
         const response = await axios.get("/api/job/");
-        const fetchedJobs = response.data.jobs; 
+        const fetchedJobs = response.data.jobs;
 
         // Limit to 4 jobs
         const limitedJobs = fetchedJobs.slice(0, 4);
@@ -39,20 +39,25 @@ const RecentJobs: React.FC = () => {
   }, []);
 
   return (
-    <div className="mx-auto px-4 py-10 mb-10 mt-5">
+    <div className="mx-auto px-4 sm:px-6 lg:px-8 py-10 mb-10 mt-5 max-w-screen-xl">
       <h1 className="text-base font-bold text-center text-blue-500 mt-10">
         RECENT JOB
       </h1>
-      <h1 className="text-5xl text-slate-700 font-semibold text-center mt-4">
+      <h1 className="text-3xl sm:text-4xl md:text-5xl text-slate-700 font-semibold text-center mt-4">
         Featured Jobs
       </h1>
-      <div className="p-4 flex flex-col justify-center items-center w-full">
+
+      <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-6 w-full">
         {loading ? (
-          <p className="text-center text-gray-500">Loading jobs...</p>
+          <p className="text-center text-gray-500 col-span-full">
+            Loading jobs...
+          </p>
         ) : error ? (
-          <p className="text-center text-red-500">{error}</p>
+          <p className="text-center text-red-500 col-span-full">{error}</p>
         ) : jobs.length === 0 ? (
-          <p className="text-center text-gray-500">No jobs available.</p>
+          <p className="text-center text-gray-500 col-span-full">
+            No jobs available.
+          </p>
         ) : (
           jobs.map((job) => (
             <JobCard
